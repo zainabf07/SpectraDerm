@@ -12,11 +12,12 @@
 
 ## 🎥 Demo Video
 
-See SpectraDerm in action — from **RGB image upload and AI-estimated spectral reconstruction** to **skin analysis, change detection, RAG-based explana[demo.zip](https://github.com/user-attachments/files/32416155/demo.zip)
+See SpectraDerm in action — from **RGB image upload and AI-estimated spectral reconstruction** to **skin analysis, change detection, RAG-based explanation, safety assessment, and the final monitoring report**.
 
 
-tion, safety assessment, and the final monitoring report**.
 
+
+https://github.com/user-attachments/assets/989945d0-4a8f-4e28-9901-5f447ba61b9e
 
 
 
