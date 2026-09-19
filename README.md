@@ -1,74 +1,253 @@
-# SpectraDerm 🩺🔬
+# SpectraDerm
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
+[![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)](https://react.dev/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-Deep%20Learning-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org/)
+[![scikit--learn](https://img.shields.io/badge/scikit--learn-ML-F7931E?logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
+[![MCP](https://img.shields.io/badge/MCP-Tool%20Integration-purple)](https://modelcontextprotocol.io/)
+[![RAG](https://img.shields.io/badge/RAG-Evidence%20Grounded-orange)](#-retrieval-augmented-generation-rag)
+[![Status](https://img.shields.io/badge/Status-Capstone%20Prototype-yellow)](#-limitations)
 
-### AI-Based Early Warning & Skin Monitoring Using RGB-to-Spectral Reconstruction, Multimodal Analysis, and Evidence-Grounded Multi-Agent AI
+### AI-Based Early Warning and Skin Monitoring Using RGB-to-Spectral Reconstruction, Multimodal Analysis, and Evidence-Grounded Multi-Agent AI
 
-SpectraDerm is an AI-powered skin monitoring prototype that uses **ordinary RGB smartphone images** to help users identify and monitor subtle changes in their skin over time.
+## 🎥 Demo Video
 
-Instead of requiring specialized multispectral or hyperspectral cameras, SpectraDerm uses an AI model to generate **estimated spectral information from RGB images**. This information is combined with conventional RGB features and a user's previous scans to identify unusual or changing patterns.
+See SpectraDerm in action — from **RGB image upload and AI-estimated spectral reconstruction** to **skin analysis, change detection, RAG-based explanation, safety assessment, and the final monitoring report**.
 
-The system then uses **RAG (Retrieval-Augmented Generation)**, specialized AI agents, and **Model Context Protocol (MCP)** tools to provide evidence-grounded explanations, safety checks, and appropriate next-step guidance.
 
-> **Important:** SpectraDerm is a capstone prototype for skin monitoring and awareness. It is **not a diagnostic medical device**, does not diagnose skin diseases, and its estimated spectral output is not an actual multispectral or hyperspectral measurement.
+
+SpectraDerm is an AI-powered skin monitoring prototype that uses ordinary RGB images to help users observe subtle changes in their skin over time.
+
+Instead of requiring specialized multispectral or hyperspectral imaging hardware, SpectraDerm uses AI to generate an **estimated spectral representation** from an RGB image. The system combines RGB features, estimated spectral features, scan history, and personal baseline information to identify model-derived changes or anomalies.
+
+When a change is detected, SpectraDerm uses **Retrieval-Augmented Generation (RAG)** and specialized AI agents to provide evidence-grounded explanations, perform safety checks, and suggest an appropriate next step.
+
+> **Important:** SpectraDerm is a skin monitoring and awareness prototype. It does **not** diagnose skin diseases, provide a disease probability, or replace a dermatologist. Its spectral output is AI-estimated rather than an actual multispectral/hyperspectral measurement.
 
 ---
 
-## 🌟 Key Features
+## ✨ Key Features
 
-### 📸 1. RGB Image Analysis
+* 📷 **RGB Image Analysis**
 
-Users provide an ordinary RGB photograph of their skin.
+  * Upload/capture ordinary skin images.
+  * Perform image quality assessment before analysis.
 
-The system performs:
+* 🔍 **Skin & Region Detection**
 
-* Image quality assessment
-* Blur and exposure checking
-* Skin-region detection
-* Relevant region/lesion localization
-* RGB feature extraction
+  * Identify relevant skin regions.
+  * Localize areas that can be monitored across scans.
 
-### 🌈 2. AI Spectral Reconstruction
+* 🌈 **RGB-to-Spectral Reconstruction**
 
-SpectraDerm reconstructs an **AI-estimated spectral representation** from the RGB image.
+  * Generate AI-estimated spectral information from RGB images.
+  * Visualize the reconstructed spectral representation.
+
+* 🧬 **Multimodal Feature Extraction**
+
+  * RGB color, texture, shape and related features.
+  * Estimated spectral features.
+  * Temporal/history-based features.
+
+* 🤖 **Machine Learning Analysis**
+
+  * Analyze combined feature representations.
+  * Generate a model-derived change/anomaly score.
+
+* 👤 **Personal Baseline**
+
+  * The first scan establishes the user's personal reference.
+  * Later scans are compared against previous/baseline scans.
+
+* 📈 **Longitudinal Monitoring**
+
+  * Track changes across multiple scans.
+  * Visualize stable, changed, or increasing-change patterns.
+
+* 📚 **RAG-Based Evidence**
+
+  * Retrieve relevant dermatology information from a curated knowledge base.
+  * Ground explanations in retrieved evidence rather than relying only on model-generated information.
+
+* 🧠 **Multi-Agent AI**
+
+  * Vision Agent
+  * Monitoring Agent
+  * Evidence Agent
+  * Safety Agent
+  * Product Agent
+  * Referral Agent
+  * Orchestrator Agent
+
+* 🔌 **Model Context Protocol (MCP)**
+
+  * Provides a standardized tool layer for the agents.
+  * Exposes core analysis, retrieval, history, referral, and reporting capabilities.
+
+* 👨‍⚕️ **Dermatologist Referral**
+
+  * Supports professional-assessment referral when the safety workflow indicates it may be appropriate.
+
+* 🧴 **General Skincare Guidance**
+
+  * Provides appropriate general skincare/product-category guidance.
+  * Product recommendations do not influence the underlying ML detection result.
+
+* 📄 **Structured Final Report**
+
+  * Combines image analysis, spectral analysis, ML findings, historical change, evidence, safety assessment, and recommended action.
+
+The project's planned user journey is **Home → Scan → Analysis → Result → History → Explanation → Next Action**.
+
+---
+
+## 🏗️ System Architecture
+
+```text
+                         SPECTRADERM
+                              │
+                              ▼
+                       📷 RGB IMAGE
+                              │
+                              ▼
+                    Image Quality Check
+                              │
+                              ▼
+                    Skin / Region Detection
+                              │
+                              ▼
+                 RGB-to-Spectral Reconstruction
+                              │
+                 ┌────────────┴────────────┐
+                 ▼                         ▼
+           RGB Features              Spectral Features
+                 │                         │
+                 └────────────┬────────────┘
+                              ▼
+                       Feature Engine
+                              │
+                              ▼
+                       Machine Learning
+                              │
+                              ▼
+                    Change / Anomaly Score
+                              │
+                              ▼
+                    Personal Baseline
+                              │
+                              ▼
+                    Temporal Comparison
+                              │
+                              ▼
+                       Agent System
+                              │
+              ┌───────────────┼───────────────┐
+              ▼               ▼               ▼
+           Vision        Monitoring        Evidence
+           Agent            Agent            Agent
+              │               │               │
+              └───────────────┼───────────────┘
+                              ▼
+                         Safety Agent
+                          /        \
+                         /          \
+                        ▼            ▼
+                  Product Agent   Referral Agent
+                         \          /
+                          \        /
+                           ▼      ▼
+                         MCP SERVER
+                              │
+                ┌─────────────┼─────────────┐
+                ▼             ▼             ▼
+             ML Tools      RAG Tools    External Tools
+                │             │             │
+                └─────────────┼─────────────┘
+                              ▼
+                       FINAL REPORT
+                              │
+                 ┌────────────┼────────────┐
+                 ▼            ▼            ▼
+              Analysis     History       Action
+```
+
+This architecture follows the project's module plan and integrates computer vision, spectral AI, classical ML, temporal monitoring, RAG, agents, MCP, and reporting into one end-to-end workflow.
+
+---
+
+## 🔄 End-to-End Workflow
 
 ```text
 RGB Image
-    ↓
-Spectral Reconstruction Model
-    ↓
-AI-Estimated Spectral Image
+   ↓
+Image Quality Assessment
+   ↓
+Skin / Region Detection
+   ↓
+AI-Estimated Spectral Reconstruction
+   ↓
+RGB + Spectral Feature Extraction
+   ↓
+ML Analysis
+   ↓
+Change / Anomaly Score
+   ↓
+Personal Baseline & Scan History
+   ↓
+Longitudinal Comparison
+   ↓
+Vision / Monitoring / Evidence Agents
+   ↓
+RAG Evidence Retrieval
+   ↓
+Safety Assessment
+   ↓
+Referral / Product Guidance
+   ↓
+Final Structured Report
 ```
-
-The spectral representation is used as an additional source of model-derived information.
-
-It must not be interpreted as an actual NIR, multispectral, or hyperspectral measurement.
 
 ---
 
-### 🧬 3. Multimodal Feature Analysis
+## 🌈 Spectral Reconstruction
 
-SpectraDerm combines information from multiple sources:
+SpectraDerm converts an ordinary RGB image into an **AI-estimated spectral representation**.
 
 ```text
-RGB Features
-      +
-Estimated Spectral Features
-      +
-Temporal Features
-      ↓
-Combined Feature Vector
-      ↓
-ML Analysis
+RGB Image
+H × W × 3
+      │
+      ▼
+Spectral Reconstruction Model
+      │
+      ▼
+Estimated Spectral Image
+H × W × N
 ```
 
-RGB features may include:
+The reconstruction is used to obtain additional information that can be combined with conventional RGB features.
 
-* Color
+The system explicitly labels this output as **AI-estimated spectral information** rather than claiming that it is an actual multispectral or hyperspectral measurement.
+
+---
+
+## 🧬 Feature Engineering
+
+SpectraDerm combines multiple types of information:
+
+### RGB Features
+
+Examples include:
+
+* Color statistics
 * Texture
 * Shape
 * Local contrast
 * Pigmentation-related features
 
-Estimated spectral features may include:
+### Spectral Features
+
+Examples include:
 
 * Band-wise intensity
 * Spectral ratios
@@ -76,13 +255,23 @@ Estimated spectral features may include:
 * Regional spectral statistics
 * Spectral signatures
 
+### Temporal Features
+
+Historical scan information is incorporated to support longitudinal monitoring.
+
+The combined representation is then passed to the downstream ML analysis pipeline.
+
 ---
 
-### 📊 4. Change / Anomaly Detection
+## 🤖 Machine Learning & Change Detection
 
-The system generates a **model-derived change/anomaly score** representing how much the observed pattern differs from a reference pattern.
+SpectraDerm uses engineered image/spectral features for downstream machine-learning analysis.
 
-Example:
+The project includes an RGB baseline and an RGB + estimated-spectral representation to investigate whether the additional estimated spectral information provides useful signal.
+
+The resulting value is a **change/anomaly score**, not a disease probability.
+
+For example:
 
 ```text
 Stable
@@ -98,123 +287,106 @@ A score such as:
 Change / Anomaly Score: 72 / 100
 ```
 
-does **not** represent disease probability.
-
-It means that the observed pattern differs from the learned or personal reference pattern.
+means that the observed pattern differs from the learned/reference pattern. It should **not** be interpreted as a 72% probability of disease.
 
 ---
 
-### 👤 5. Personal Skin Baseline
+## 👤 Personal Baseline & Longitudinal Monitoring
 
-The first scan establishes a personal baseline.
+Every user's skin can have different normal characteristics, so SpectraDerm establishes a personal reference.
+
+### First Scan
 
 ```text
 First Scan
     ↓
-RGB + Estimated Spectral Information
+RGB + Estimated Spectrum
     ↓
 Personal Baseline
 ```
 
-Future scans are compared against this baseline because different people naturally have different skin characteristics.
-
-Example:
+### Subsequent Scans
 
 ```text
-Scan 1 → Baseline Established
-
-Scan 2 → Compare with Baseline
-          ↓
-       Change Detected
-
-Scan 3+ → Longitudinal Comparison
-           ↓
-        Trend Analysis
+Current Scan
+     +
+Personal Baseline
+     ↓
+Difference Analysis
+     ↓
+Stable / Changed / Increasing Change
 ```
 
----
+The system can then visualize how the monitored region changes over time.
 
-### 📈 6. Longitudinal Skin Monitoring
-
-SpectraDerm stores scan history and compares later scans with previous observations.
-
-Possible outputs include:
-
-* Stable
-* Changed
-* Increasing Change
-
-The interface can also display a difference map highlighting the region where a model-derived change was observed.
+The project workflow establishes the first scan as the baseline; later scans can be compared longitudinally. A trend visualization becomes more meaningful once multiple comparisons are available.
 
 ---
 
-## 🧠 RAG-Based Medical Evidence
+## 📚 Retrieval-Augmented Generation (RAG)
 
-SpectraDerm uses a dermatology-focused knowledge base to ground AI explanations in retrieved evidence.
+SpectraDerm uses a dermatology-focused knowledge base to support evidence-grounded explanations.
 
-The knowledge base covers areas such as:
+The knowledge base covers topics such as:
 
 * General dermatology
 * Skin pigmentation
 * Melanin
-* Hemoglobin/vascular characteristics
 * Common skin conditions
 * Warning signs
-* When professional assessment may be appropriate
+* Situations where professional assessment may be appropriate
 
-The retrieval pipeline follows:
+### RAG Pipeline
 
 ```text
-Medical Documents
+Knowledge Documents
        ↓
-     Clean
+Cleaning
        ↓
-     Chunk
+Chunking
        ↓
-    Embed
+Embedding
        ↓
-Vector Database
+Local Vector Representation
        ↓
-   Retrieval
+Semantic Retrieval
        ↓
 Relevant Evidence
-       ↓
-      LLM
        ↓
 Evidence-Grounded Explanation
 ```
 
-This allows the system to answer questions such as:
+The RAG component is used when the user asks questions such as:
 
 > **"Why was this flagged?"**
 
-using retrieved supporting information rather than relying entirely on the language model's general knowledge.
+The system retrieves relevant evidence and uses it to ground the explanation.
 
 ---
 
-# 🤖 Multi-Agent AI Architecture
+## 🧠 Multi-Agent Architecture
 
-SpectraDerm divides responsibilities between specialized AI agents.
+SpectraDerm separates responsibilities across specialized agents.
 
-| Agent                 | Responsibility                                                                |
-| --------------------- | ----------------------------------------------------------------------------- |
-| 👁️ Vision Agent      | Interprets image analysis, spectral reconstruction, features and ML outputs   |
-| 📈 Monitoring Agent   | Compares scans, reads history and identifies trends                           |
-| 📚 Evidence Agent     | Performs RAG retrieval and produces evidence-grounded explanations            |
-| 🛡️ Safety Agent      | Checks safety, claims and whether professional assessment should be suggested |
-| 👨‍⚕️ Referral Agent  | Finds available dermatologists when professional assessment is appropriate    |
-| 🛍️ Product Agent     | Handles appropriate general skincare recommendations                          |
-| 🎯 Orchestrator Agent | Coordinates the overall workflow                                              |
+| Agent                  | Responsibility                                            |
+| ---------------------- | --------------------------------------------------------- |
+| **Vision Agent**       | Interprets image, spectral, feature, and ML outputs       |
+| **Monitoring Agent**   | Handles scan history, comparisons, and trends             |
+| **Evidence Agent**     | Performs RAG retrieval and evidence-grounded explanations |
+| **Safety Agent**       | Applies safety checks and referral logic                  |
+| **Product Agent**      | Handles appropriate skincare/product-category guidance    |
+| **Referral Agent**     | Helps surface dermatologist options                       |
+| **Orchestrator Agent** | Coordinates the overall workflow                          |
 
-The agent architecture is designed so that commercial product recommendations do not influence the underlying detection result.
+The agents are connected to the underlying application capabilities through MCP.
 
 ---
 
-# 🔌 MCP Integration
+## 🔌 MCP Integration
 
-SpectraDerm uses **Model Context Protocol (MCP)** as a standardized tool layer between the AI agents and system capabilities.
+SpectraDerm uses **Model Context Protocol (MCP)** as the tool/integration layer.
 
-Potential MCP tools include:
+The MCP server exposes tools for the agents, including:
 
 ```text
 reconstruct_spectrum()
@@ -229,505 +401,408 @@ get_partner_products()
 generate_report()
 ```
 
-Conceptually:
+This allows the agent system to interact with the core SpectraDerm capabilities in a structured way.
+
+---
+
+## 📄 Final Report
+
+The final report combines:
 
 ```text
-                AI Agents
-                    │
-                    ▼
-              MCP Server
-                    │
-        ┌───────────┼───────────┐
-        ▼           ▼           ▼
-     ML Tools    RAG Tools   External Tools
-        │           │           │
-        └───────────┼───────────┘
-                    ▼
-               Final Report
+Image Analysis
+      +
+Spectral Analysis
+      +
+ML Score
+      +
+Historical Change
+      +
+RAG Evidence
+      +
+Safety Assessment
+      +
+Recommended Action
+      ↓
+Final SpectraDerm Report
 ```
 
-This separates the agent reasoning layer from the underlying tools and application services.
+The goal is to present the result as a structured monitoring report rather than simply displaying a numerical score.
 
 ---
 
-# 🔄 Complete System Workflow
-
-The complete SpectraDerm workflow is:
-
-```text
-                 RGB Image
-                     │
-                     ▼
-             Image Quality Check
-                     │
-                     ▼
-          Skin / Region Detection
-                     │
-                     ▼
-          AI Spectral Reconstruction
-                     │
-            ┌────────┴────────┐
-            ▼                 ▼
-       RGB Features     Spectral Features
-            │                 │
-            └────────┬────────┘
-                     ▼
-              Classical ML
-                     │
-                     ▼
-          Change / Anomaly Score
-                     │
-                     ▼
-             Personal Baseline
-                     │
-                     ▼
-            Temporal Analysis
-                     │
-                     ▼
-               AI Agents
-                     │
-          ┌──────────┼──────────┐
-          ▼          ▼          ▼
-       Vision    Monitoring   Evidence
-          │          │          │
-          └──────────┼──────────┘
-                     ▼
-                Safety Agent
-                  /     \
-                 /       \
-                ▼         ▼
-           Product      Referral
-                \         /
-                 \       /
-                  ▼     ▼
-                MCP Layer
-                     │
-                     ▼
-               Final Report
-```
-
-The proposed end-to-end flow is based on the project architecture: RGB image → quality check → region detection → spectral reconstruction → feature analysis → change scoring → personal baseline/history → agents → RAG/safety → next action → report.
-
----
-
-# 📋 Final User Report
-
-The final report brings together:
-
-* Image analysis
-* AI-estimated spectral analysis
-* ML/change score
-* Historical comparison
-* RAG evidence
-* Safety assessment
-* Recommended next action
-
-A typical result can communicate:
-
-```text
-Monitoring Recommended
-
-An unusual model-derived change was
-detected in one region.
-
-[Highlighted Region]
-
-Why was this flagged?
-↓
-Evidence-grounded explanation
-
-Next Action
-↓
-Continue monitoring
-or
-Consider professional assessment
-```
-
-Persistent or potentially concerning patterns can lead to a suggestion to consider professional assessment and, where appropriate, dermatologist referral.
-
----
-
-# 🗂️ Dataset Strategy
-
-The project proposal defines three dataset roles:
-
-### Dataset A — RGB-to-Spectral Reconstruction
-
-**Hyper-Skin**
-
-Used primarily for training and evaluating the RGB-to-spectral reconstruction component.
-
-### Dataset B — Spectral Skin Analysis
-
-**UMINHO-HSFD**
-
-Used for developing and evaluating spectral-based skin analysis.
-
-### Dataset C — Testing & Robustness
-
-The proposal states that this dataset was **under consideration and not yet finalized**.
-
-Dataset selection is intended to consider:
-
-* Availability
-* Licensing
-* Image quality
-* Spectral bands
-* Labels
-* Subject distribution
-* Skin-tone diversity
-
----
-
-# 🧪 Model Evaluation
-
-SpectraDerm does not assume that adding estimated spectral information automatically improves performance.
-
-The project compares:
-
-```text
-RGB-only Model
-       VS
-RGB + Estimated Spectral Model
-```
-
-Possible baseline algorithms include:
-
-* Random Forest
-* XGBoost
-* Logistic Regression
-
-Spectral reconstruction is evaluated using metrics such as:
-
-* MAE
-* RMSE
-* Spectral Angle / related spectral similarity metrics
-
-The project also considers:
-
-* Generalization
-* Skin-tone diversity
-* False positives
-* False negatives
-
----
-
-# 🖥️ Application Flow
-
-The planned frontend follows:
+## 🖥️ Application Flow
 
 ```text
 Home
   ↓
-Scan
+Start Scan
+  ↓
+Upload / Capture Image
   ↓
 Analysis
+  ↓
+Spectral Reconstruction
+  ↓
+Skin Analysis
   ↓
 Result
   ↓
-History
+Highlighted Region
   ↓
-AI Explanation
+Change / Monitoring Status
+  ↓
+Why Was This Flagged?
+  ↓
+Evidence-Grounded Explanation
   ↓
 Next Action
-```
-
-### Home
-
-```text
-SpectraDerm
-
-[ Start Scan ]
-
-[ My Skin History ]
-```
-
-### Analysis
-
-```text
-RGB
- ↓
-Spectral Reconstruction
- ↓
-Analysis
-```
-
-### Result
-
-```text
-🟡 Monitoring Recommended
-
-Unusual change detected
-in one region.
-
-[Highlighted Region]
-```
-
-### History
-
-```text
-May ─ June ─ July ─ Aug
- ●      ●      ●      ●
-
-Stable  Stable  Slight Change
-```
-
-### AI Explanation
-
-```text
-Why was this flagged?
-
-↓
-Evidence-grounded explanation
-```
-
-### Next Action
-
-```text
-Stable
-  ↓
-Continue monitoring
-
-OR
-
-Persistent / concerning change
-  ↓
-Consider professional assessment
-  ↓
-Find Dermatologist
+  ├── Continue Monitoring
+  ├── Consider Professional Assessment
+  └── Find Dermatologist
 ```
 
 ---
 
-# 🔐 Privacy & Security
+## 🛠️ Technology Stack
 
-SpectraDerm is designed with privacy-aware principles including:
+### Frontend
 
-* Pseudonymous user IDs
-* Minimum-necessary data collection
-* Access controls
-* Secure storage
-* Consent management
-* Data deletion mechanisms
+* React
+* React DOM
+* JavaScript / TypeScript
+* Vite
 
-The project describes its approach as **HIPAA-aware / HIPAA-inspired**, rather than claiming HIPAA compliance. Actual compliance depends on deployment environment, organization, data flows, and jurisdiction.
+### Backend
+
+* Python
+* FastAPI
+* Uvicorn
+* Pydantic
+* python-multipart
+
+### Computer Vision & Image Processing
+
+* OpenCV
+* Pillow
+* NumPy
+
+### Deep Learning / Spectral AI
+
+* PyTorch
+* MST++ / MST-Plus-Plus
+* Einops
+
+### Data & Scientific Computing
+
+* Pandas
+* NumPy
+* SciPy
+* h5py / HDF5
+
+### Machine Learning
+
+* scikit-learn
+* Random Forest
+* Custom feature-engineering pipelines
+
+### RAG
+
+* FastEmbed
+* `BAAI/bge-small-en-v1.5`
+* 384-dimensional embeddings
+* Local NumPy embedding matrix
+* Cosine-similarity retrieval
+
+### Agents & Tool Integration
+
+* Custom Python agent architecture
+* Official Python MCP SDK
+
+### Storage
+
+* Local filesystem-backed JSON metadata
+* Managed image artifacts
+* Local NumPy embedding storage for RAG
+
+### Testing
+
+* Pytest
+* Vitest
+* React Testing Library
+
+### External Integration
+
+* HTTPX
+* Google Places-oriented dermatologist referral provider
 
 ---
 
-# ⚠️ Limitations
-
-SpectraDerm has important limitations:
-
-1. **Estimated spectral information is a model prediction**, not an actual multispectral or hyperspectral measurement.
-2. The change/anomaly score represents deviation from a reference pattern, **not disease probability**.
-3. SpectraDerm does not diagnose skin diseases.
-4. It does not replace a dermatologist.
-5. A detected change is not guaranteed to be medically significant.
-6. The prototype is not a clinically validated medical tool.
-7. The project does not claim legal HIPAA compliance.
-
----
-
-# 🛠️ Technology Stack
-
-The proposed technology stack includes:
-
-| Area                    | Technology                                      |
-| ----------------------- | ----------------------------------------------- |
-| Programming             | Python                                          |
-| Deep Learning           | PyTorch                                         |
-| Computer Vision         | OpenCV / PyTorch                                |
-| Spectral Reconstruction | HyperCNN / Pix2HS-style or suitable alternative |
-| Machine Learning        | XGBoost / Random Forest / Logistic Regression   |
-| Data Processing         | NumPy / Pandas / scikit-learn                   |
-| RAG                     | Sentence Transformers                           |
-| Vector Database         | FAISS / Chroma                                  |
-| Backend                 | FastAPI                                         |
-| AI Agents               | LLM-based agent framework                       |
-| Tool Integration        | MCP                                             |
-| Frontend                | Web application framework                       |
-
-The final technologies may be adjusted according to dataset compatibility, available resources, and capstone constraints.
-
----
-
-# 📁 Project Architecture
-
-A high-level project structure can follow:
+## 📂 Project Structure
 
 ```text
 SpectraDerm/
 │
 ├── frontend/
-│   ├── pages/
-│   ├── components/
-│   └── assets/
+│   ├── src/
+│   ├── public/
+│   └── package.json
 │
 ├── backend/
+│   ├── agents/
 │   ├── api/
-│   ├── models/
-│   ├── services/
-│   └── database/
+│   ├── ml/
+│   ├── rag/
+│   ├── mcp/
+│   ├── storage/
+│   ├── reporting/
+│   └── tests/
 │
-├── spectral/
-│   ├── preprocessing/
-│   ├── reconstruction/
-│   ├── validation/
-│   └── visualization/
+├── models/
+│   └── spectral/
 │
-├── ml/
-│   ├── feature_extraction/
-│   ├── baseline_model/
-│   ├── spectral_model/
-│   └── anomaly_detection/
+├── data/
+│   └── knowledge/
 │
-├── rag/
-│   ├── documents/
-│   ├── processing/
-│   ├── embeddings/
-│   └── retrieval/
-│
-├── agents/
-│   ├── vision_agent/
-│   ├── monitoring_agent/
-│   ├── evidence_agent/
-│   ├── safety_agent/
-│   ├── referral_agent/
-│   ├── product_agent/
-│   └── orchestrator/
-│
-├── mcp/
-│   ├── server/
-│   └── tools/
+├── notebooks/
 │
 ├── tests/
 │
+├── .env.example
+├── requirements.txt
 └── README.md
 ```
 
+> The exact directory structure may vary depending on the current local project organization.
+
 ---
 
-# 🚀 Development Roadmap
+## ⚙️ Environment Variables
 
-The project follows a dependency-driven development order:
+Create a `.env` file in the backend/project environment and configure the required services.
+
+Example:
+
+```env
+GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+```
+
+Additional environment variables can be configured according to the backend deployment and enabled integrations.
+
+**Never commit API keys or other secrets to Git.**
+
+---
+
+## 🚀 Installation
+
+### 1. Clone the repository
+
+```bash
+git clone <repository-url>
+cd SpectraDerm
+```
+
+### 2. Create a Python virtual environment
+
+```bash
+python -m venv .venv
+```
+
+Activate it:
+
+**Windows**
+
+```bash
+.venv\Scripts\activate
+```
+
+**Linux / macOS**
+
+```bash
+source .venv/bin/activate
+```
+
+### 3. Install backend dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Install frontend dependencies
+
+```bash
+cd frontend
+npm install
+cd ..
+```
+
+### 5. Configure environment variables
+
+Create `.env` using the project's environment configuration requirements.
+
+### 6. Start the backend
+
+```bash
+uvicorn backend.main:app --reload
+```
+
+### 7. Start the frontend
+
+```bash
+cd frontend
+npm run dev
+```
+
+The frontend will then be available through the Vite development server.
+
+---
+
+## 🧪 Testing
+
+SpectraDerm uses testing at multiple levels.
+
+### Backend
+
+```bash
+pytest
+```
+
+### Frontend
+
+```bash
+npm test
+```
+
+Testing covers areas such as:
+
+* Image-processing behavior
+* ML functionality
+* RAG retrieval
+* Agent behavior
+* Safety logic
+* MCP tools
+* Referral workflow
+* Frontend components
+* End-to-end integration
+
+The project plan specifically identifies ML, agent, MCP, and complete end-to-end testing as important validation stages.
+
+---
+
+## 🔐 Privacy & Safety
+
+Because SpectraDerm processes skin images, privacy and responsible-use considerations are built into the design.
+
+The system is designed around:
+
+* Pseudonymous user IDs
+* Minimum-necessary information
+* Access controls
+* Secure storage
+* Consent handling
+* Data deletion
+* Safety checks before recommendations/referrals
+
+The project is **HIPAA-aware / HIPAA-inspired**, but it does **not claim legal HIPAA compliance**. Actual compliance depends on the organization, deployment environment, data flows, and applicable jurisdiction.
+
+---
+
+## ⚠️ Limitations
+
+SpectraDerm has several important limitations:
+
+1. **Estimated spectral information**
+
+   * The reconstructed spectrum is a model prediction, not a physical multispectral/hyperspectral measurement.
+
+2. **Not a diagnostic system**
+
+   * SpectraDerm does not diagnose skin diseases.
+
+3. **Change score is not disease probability**
+
+   * A high score indicates deviation from a reference pattern, not the probability of having a disease.
+
+4. **Medical significance cannot be guaranteed**
+
+   * A detected change may or may not be medically significant.
+
+5. **Prototype status**
+
+   * SpectraDerm is a capstone prototype and is not a validated clinical device.
+
+6. **Professional assessment**
+
+   * Concerning or persistent changes may warrant professional assessment rather than relying on the system alone.
+
+These limitations are explicitly reflected in the project's proposal and module plan.
+
+---
+
+## 🎯 Project Goals
+
+SpectraDerm demonstrates how several AI technologies can be integrated into one practical application:
 
 ```text
-Data
-  ↓
-Spectral Reconstruction
-  ↓
-Feature Extraction
-  ↓
-Classical ML
-  ↓
-Baseline / Change Detection
-  ↓
+Computer Vision
+       +
+Spectral AI
+       +
+Feature Engineering
+       +
+Machine Learning
+       +
+Longitudinal Monitoring
+       +
 RAG
-  ↓
-AI Agents
-  ↓
+       +
+Multi-Agent AI
+       +
 MCP
-  ↓
-Backend
-  ↓
-Frontend
-  ↓
-Integration
-  ↓
-Testing
-  ↓
-Demo
+       +
+FastAPI
+       +
+React
+       ↓
+SpectraDerm
 ```
 
-The module plan emphasizes this dependency order so that components are integrated progressively rather than developed as disconnected features.
+The objective is not to replace dermatologists, but to provide an accessible **monitoring and awareness workflow** that can help users observe changes and understand why the system flagged a particular pattern.
 
 ---
 
-# 👥 Team
+## 👥 Team
 
-SpectraDerm is a **3-person AI/ML Bootcamp capstone project**.
+**SpectraDerm — AI Bootcamp Capstone**
 
-| Team Member       | Primary Focus                        |
-| ----------------- | ------------------------------------ |
-| **Zainab Fatima** | Data, Computer Vision & Spectral AI  |
-| **Ayesha Noor**   | Machine Learning, RAG & AI Agents    |
-| **Javaria Akbar** | Backend, Frontend, Privacy & Testing |
+* **Zainab Fatima** — Data, Computer Vision & Spectral AI
+* **Ayesha Noor** — Machine Learning, RAG & AI Agents
+* **Javaria Akbar** — Backend, Frontend, Privacy & Testing
 
-The responsibilities cover the complete pipeline from data and spectral reconstruction through ML, RAG, agents, MCP, application development, privacy, testing, and integration.
+The project was developed as a collaborative end-to-end AI/ML capstone.
 
 ---
 
-# 🎯 Demo Story
+## 📌 Disclaimer
 
-The intended final demonstration follows **one user's journey** rather than showing isolated technical components:
+SpectraDerm is an educational AI/ML capstone prototype intended for skin monitoring and awareness.
 
-```text
-1. User takes/uploads a skin photo
-                ↓
-2. SpectraDerm performs image analysis
-                ↓
-3. AI-estimated spectral representation appears
-                ↓
-4. System identifies a model-derived change
-                ↓
-5. Baseline vs current scan is shown
-                ↓
-6. User asks "Why was this flagged?"
-                ↓
-7. Evidence Agent retrieves supporting information
-                ↓
-8. Safety Agent evaluates the appropriate next step
-                ↓
-9. Referral Agent can surface dermatologists
-                ↓
-10. Final report is generated
-```
+It is **not medical advice**, a medical diagnosis system, or a replacement for professional dermatological assessment.
 
-This demonstrates how computer vision, spectral AI, ML, temporal monitoring, RAG, agents, MCP, and the application layer work together as one system.
-
----
-
-# 📌 Project Status
-
-SpectraDerm is being developed as an **AI/ML Bootcamp capstone prototype** demonstrating the integration of:
-
-* Computer Vision
-* RGB-to-Spectral Reconstruction
-* Multimodal Feature Engineering
-* Classical Machine Learning
-* Change Detection
-* Personal Baseline Monitoring
-* RAG
-* Multi-Agent AI
-* MCP
-* Backend APIs
-* Frontend Application
-* Privacy-Aware Design
-
----
-
-# ⚕️ Disclaimer
-
-SpectraDerm is intended for **monitoring and awareness**, not diagnosis.
-
-The system's AI-estimated spectral information and change/anomaly scores are model-derived outputs. They should not be interpreted as clinical measurements or definitive evidence of a medical condition.
-
-Users should seek appropriate professional medical advice when they have concerns about persistent or concerning skin changes.
+If a skin change is persistent, concerning, rapidly changing, painful, bleeding, or otherwise worrying, users should seek appropriate professional medical advice.
 
 ---
 
 ## 📜 License
 
-Add the project's applicable license here, for example:
+Add the project's applicable license here.
 
 ```text
-MIT License
+Copyright © 2026 SpectraDerm Team
 ```
-
-if the project is ultimately released under MIT.
 
 ---
 
-## ⭐ Acknowledgement
+## ⭐ Project Summary
 
-SpectraDerm was developed as an AI/ML Bootcamp capstone demonstrating how computer vision, spectral reconstruction, machine learning, retrieval-augmented generation, multi-agent AI, and MCP can be combined into an end-to-end skin monitoring prototype.
+> **SpectraDerm turns an ordinary RGB skin image into an AI-assisted monitoring workflow by combining estimated spectral information, multimodal feature analysis, personal baselines, longitudinal comparison, evidence-grounded RAG, multi-agent AI, and MCP into a single application.**
