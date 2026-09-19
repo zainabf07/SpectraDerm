@@ -1,0 +1,93 @@
+SpectraDerm - Module N Combined Feature Engine Report
+======================================================
+
+Status: Technically completed
+
+1. OBJECTIVE AND ARCHITECTURE ROLE
+----------------------------------
+
+Module N creates a combined feature representation for downstream ML; it does
+not perform diagnosis. It composes Module L RGB features, Module M
+AI-estimated spectral features, and optional temporal numerical changes. It
+does not train a model, predict disease, or redefine source features.
+
+2. INPUTS AND CURRENT FEATURE SCHEMA
+------------------------------------
+
+combine_features accepts an RGBFeatureResult from Module L and a
+SpectralFeatureResult from Module M. Finite source scalar values become
+rgb.<original_name> and spectral.<original_name>. Module M's separately
+provided regional signature is retained as spectral.signature_400 through
+spectral.signature_700 using its aligned wavelength vector. Non-finite or
+non-scalar source values are excluded from the ML vector with warnings.
+
+AI-estimated spectral information is not direct hyperspectral measurement.
+Metadata, identifiers, timestamps, warnings, and feature-group labels never
+enter the vector.
+
+3. TEMPORAL SCHEMA
+------------------
+
+For matching finite source names x, delta = current - baseline; abs_delta =
+abs(current - baseline); relative_change = (current - baseline) /
+(abs(baseline) + 1e-8); and rate_per_day = delta / elapsed_days. elapsed_days
+is timestamp difference in seconds divided by 86400. Near-zero baselines make
+relative change NaN plus a warning. Missing/zero/negative elapsed time makes
+rate NaN plus a warning. Unmatched schemas are not compared and are warned.
+
+Without baseline history, status is baseline, history_available is false, and
+raw temporal values are NaN. With a baseline, status is follow_up and matching
+features are compared. ML-ready values replace unavailable temporal NaN values
+with zero only alongside temporal.history_available and per-feature
+temporal.<feature>.available flags.
+
+4. METADATA AND VECTOR ORDER
+----------------------------
+
+FeatureMetadata holds optional anonymized observation ID, subject key,
+timestamp, baseline observation ID, history state, elapsed days, and ROI
+availability/count. It is separate from ML features.
+
+The deterministic ML order is: sorted current RGB features, sorted current
+spectral features, temporal deltas, absolute deltas, relative changes,
+rates per day, then history/per-feature availability flags. ml_vector is
+float32 and index-aligned with feature_names.
+
+5. SAFETY AND LIMITATIONS
+-------------------------
+
+Temporal change features describe numerical changes between observations;
+they do not establish disease progression. Module M vascular-related and
+pigmentation-related features remain investigational proxies. Module N does
+not establish acne, inflammation, melanin, hemoglobin, collagen, disease, or
+lesion progression, and does not create biological measurements.
+
+6. TESTING AND NOTEBOOK
+-----------------------
+
+tests/test_combined_features.py covers source validation, namespaces,
+metadata separation, baseline and follow-up handling, formulas, zero baseline,
+timestamps, schema mismatch, vector alignment/ordering, finite float32 output,
+and determinism. The companion notebook uses small local synthetic Module L/M
+results and does not run MST++ inference, require GPU, PyTorch, Colab, or a
+Hyper-Skin archive. Validation result: 25 Module N tests passed. The requested
+Module I-M regression run produced 96 passed and 1 skipped in 1.20 seconds.
+The skip is the intentionally unavailable PyTorch MST++ integration test; no
+packages were installed.
+
+7. RELATIONSHIP TO MODULES I THROUGH M
+--------------------------------------
+
+Module N leaves Modules I-M unchanged. It consumes Module L and M result
+objects; Modules I/J/K remain reconstruction, validation, and visualization
+layers, while G/H remain responsible for any ROI selection.
+
+8. COMPLETION STATUS
+--------------------
+
+[YES] Namespaced current RGB and spectral features
+[YES] Aligned spectral signature features
+[YES] Honest raw temporal NaN representation
+[YES] Finite ML-ready vector with availability flags
+[YES] Metadata isolation and deterministic ordering
+[YES] Dedicated tests and local notebook

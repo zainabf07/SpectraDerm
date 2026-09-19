@@ -1,0 +1,376 @@
+SpectraDerm — Module J
+Spectral Reconstruction Validation Report
+==========================================
+
+1. OBJECTIVE
+------------
+
+Module J validates whether the RGB-to-spectral reconstruction model produces
+spectral outputs that are sufficiently consistent with measured hyperspectral
+ground truth.
+
+The validation focuses on:
+
+- Predicted spectrum vs ground-truth spectrum
+- MAE
+- RMSE
+- Spectral Angle Mapper (SAM)
+- Per-band reconstruction quality
+- Visual comparison of ground truth and prediction
+- Identification of lower- and higher-error wavelength regions
+- Suitability of the reconstructed spectra for downstream analysis
+
+The purpose is to validate reconstruction quality before making any biological
+or clinical interpretation of the reconstructed spectral information.
+
+
+2. MODEL
+--------
+
+Model:
+MST++ (MST_Plus_Plus)
+
+Task:
+RGB -> VIS spectral reconstruction
+
+Input:
+RGB image
+
+Output:
+31-band estimated VIS spectral cube
+
+Spectral range:
+400–700 nm
+
+Spectral interval:
+10 nm
+
+Number of output bands:
+31
+
+The MST++ architecture was obtained from the Hyper-Skin project implementation.
+The SpectraDerm team trained its own RGB-to-VIS MST++ model using Hyper-Skin
+paired RGB/VIS data.
+
+Checkpoint:
+mstpp_hyperskin_vis_best_10pairs.pth
+
+Important:
+The reconstructed spectra are AI-estimated outputs and are not direct
+spectrometer measurements.
+
+
+3. VALIDATION DATA
+------------------
+
+Dataset:
+Hyper-Skin
+
+Held-out subjects evaluated:
+
+- p035_neutral_front
+- p036_smile_left
+- p039_neutral_right
+
+Evaluation procedure:
+
+- RGB images were normalized to [0, 1].
+- Corresponding VIS ground-truth cubes were loaded from the Hyper-Skin VIS
+  data.
+- A consistent 128 x 128 crop was used for each held-out subject.
+- Each RGB crop was passed through the trained MST++ model.
+- The resulting 31-band prediction was compared with the corresponding
+  ground-truth VIS crop.
+
+The same evaluation procedure was applied to all three subjects.
+
+
+4. OVERALL VALIDATION RESULTS
+-----------------------------
+
+Three-subject mean results:
+
+MAE:
+0.1275636554
+
+RMSE:
+0.1489587973
+
+Mean SAM:
+0.5942035119 radians
+
+Mean SAM:
+34.0453534 degrees
+
+
+5. PER-SUBJECT RESULTS
+----------------------
+
+Subject              MAE          RMSE         SAM (rad)     SAM (deg)
+-----------------------------------------------------------------------
+p035              0.127054      0.148204       0.584848       33.5093
+p036              0.127076      0.148151       0.582008       33.3466
+p039              0.128562      0.150522       0.615755       35.2801
+
+The three subjects produced similar overall MAE and RMSE values. SAM was
+also broadly similar, although p039 produced the highest spectral-angle
+error among the three samples.
+
+
+6. PER-BAND VALIDATION
+----------------------
+
+Three-subject mean per-band results:
+
+Wavelength | Mean MAE | Mean RMSE
+----------------------------------
+400 nm     | 0.050801 | 0.065207
+410 nm     | 0.041300 | 0.049935
+420 nm     | 0.088285 | 0.092851
+430 nm     | 0.071993 | 0.075263
+440 nm     | 0.079589 | 0.082979
+450 nm     | 0.050328 | 0.052815
+460 nm     | 0.089639 | 0.091675
+470 nm     | 0.082752 | 0.085000
+480 nm     | 0.149595 | 0.151975
+490 nm     | 0.154387 | 0.156160
+500 nm     | 0.093895 | 0.095363
+510 nm     | 0.127907 | 0.129720
+520 nm     | 0.072889 | 0.073980
+530 nm     | 0.010668 | 0.014698
+540 nm     | 0.102848 | 0.104369
+550 nm     | 0.057276 | 0.058738
+560 nm     | 0.087595 | 0.089120
+570 nm     | 0.109866 | 0.111318
+580 nm     | 0.051897 | 0.054094
+590 nm     | 0.127202 | 0.128889
+600 nm     | 0.104649 | 0.105988
+610 nm     | 0.175660 | 0.177669
+620 nm     | 0.129609 | 0.131525
+630 nm     | 0.285385 | 0.288074
+640 nm     | 0.145088 | 0.147051
+650 nm     | 0.282389 | 0.285121
+660 nm     | 0.208539 | 0.210600
+670 nm     | 0.203669 | 0.205764
+680 nm     | 0.251040 | 0.252897
+690 nm     | 0.225488 | 0.227162
+700 nm     | 0.242243 | 0.244719
+
+
+7. WAVELENGTH-DEPENDENT OBSERVATIONS
+------------------------------------
+
+The reconstruction quality is strongly wavelength-dependent.
+
+Several bands showed relatively low reconstruction error across the three
+held-out subjects, including:
+
+- 410 nm
+- 450 nm
+- 530 nm
+- 550 nm
+- 580 nm
+
+The lowest mean MAE was observed at:
+
+530 nm:
+Mean MAE = 0.010668
+
+In contrast, reconstruction error increased substantially across much of
+the 630–700 nm region.
+
+The largest mean MAE values were observed at:
+
+630 nm:
+Mean MAE = 0.285385
+
+650 nm:
+Mean MAE = 0.282389
+
+680 nm:
+Mean MAE = 0.251040
+
+700 nm:
+Mean MAE = 0.242243
+
+Therefore, the model should not be treated as having uniform reconstruction
+quality across all 31 spectral bands.
+
+
+8. VISUAL VALIDATION
+--------------------
+
+A visual comparison was performed between:
+
+- RGB input
+- Ground-truth spectral band
+- MST++ predicted spectral band
+- Absolute reconstruction error
+
+A 550 nm example showed that the prediction preserved broad spatial facial
+structure but was substantially smoother than the ground-truth spectral
+image and showed visible reconstruction error.
+
+A single-pixel spectral comparison was also performed. The initially selected
+pixel was located in a dark non-skin region, so that comparison was not used
+as evidence for skin reconstruction quality.
+
+This highlighted an important validation consideration:
+
+Pixel-level spectral interpretation should be performed on appropriate skin
+regions rather than arbitrary image pixels.
+
+
+9. INFERENCE ON A NEW RGB FACIAL IMAGE
+--------------------------------------
+
+The trained MST++ model was also tested on a new RGB facial image without
+hyperspectral ground truth.
+
+The image was resized while preserving its aspect ratio.
+
+Input:
+1536 x 1024 x 3 RGB
+
+MST++ output:
+31 x 1536 x 1024
+
+The model successfully produced a complete 31-band estimated VIS spectral
+cube.
+
+Individual reconstructed wavelength images and false-color multispectral
+composites were visualized.
+
+This demonstrates that the trained model can perform RGB-to-spectral
+inference on a new image.
+
+However, because the new facial image does not have measured hyperspectral
+ground truth, quantitative reconstruction accuracy cannot be calculated for
+this image.
+
+
+10. DOWNSTREAM-USE DECISION
+---------------------------
+
+Decision:
+EXPERIMENTAL USE ONLY — NOT YET VALIDATED FOR BIOLOGICAL OR CLINICAL
+INTERPRETATION.
+
+
+The model successfully performs the intended technical transformation:
+
+RGB image
+    ->
+MST++
+    ->
+31-band estimated VIS spectral cube
+
+However, the three-subject validation demonstrates substantial
+wavelength-dependent reconstruction error.
+
+Therefore, the current evidence is not sufficient to treat the reconstructed
+spectra as equivalent to measured hyperspectral data or to directly infer
+biological skin properties.
+
+The reconstructed spectral cube may be used for:
+
+- Technical experimentation
+- Spectral visualization
+- Development and testing of downstream feature-extraction methods
+- Investigation of whether reconstructed spectral patterns can support
+  later analysis
+
+It should NOT currently be used to claim:
+
+- Clinical diagnosis
+- Disease detection
+- Actual hemoglobin concentration
+- Actual melanin concentration
+- Actual collagen concentration
+- Clinically validated inflammation detection
+- Clinically validated skin-condition detection
+
+
+11. LIMITATIONS
+---------------
+
+1. Only three held-out subjects were evaluated in this Module J experiment.
+
+2. Evaluation used a 128 x 128 crop from each held-out image rather than
+   the complete images.
+
+3. The selected crop strategy was fixed and may not represent all facial
+   regions.
+
+4. The validation dataset is relatively small for making broad
+   generalization claims.
+
+5. Reconstruction error varies considerably across wavelengths.
+
+6. The reconstructed spectra are estimates generated by a neural network,
+   not direct physical measurements.
+
+7. No clinical ground-truth labels were used in this module.
+
+8. No biological validation was performed in this module.
+
+9. No predefined clinical acceptance threshold was established for MAE,
+   RMSE, or SAM.
+
+10. Therefore, the results should be interpreted as engineering/model
+    validation rather than clinical validation.
+
+
+12. CONCLUSION
+--------------
+
+Module J successfully validated the technical RGB-to-VIS spectral
+reconstruction pipeline using paired Hyper-Skin ground-truth data.
+
+The trained MST++ model successfully generated 31-band VIS spectral
+outputs from RGB inputs.
+
+Three held-out subjects produced the following mean results:
+
+MAE  = 0.12756
+RMSE = 0.14896
+SAM  = 0.59420 radians
+SAM  = 34.05 degrees
+
+Per-band analysis demonstrated that reconstruction quality is not uniform
+across the VIS spectrum. Several bands showed lower reconstruction error,
+while substantial errors occurred particularly in the 630–700 nm region.
+
+Consequently, the current reconstruction model is considered technically
+functional and suitable for experimental downstream development, but the
+available evidence is insufficient to treat the reconstructed spectral data
+as clinically or biologically validated measurements.
+
+Further validation and/or model improvement is required before using
+reconstructed spectra as evidence for biological skin-feature inference.
+
+
+13. MODULE J STATUS
+------------------
+
+STATUS: COMPLETE — WITH VALIDATION LIMITATIONS
+
+The required Module J activities were completed:
+
+[✓] Predicted spectrum compared with ground truth
+[✓] MAE calculated
+[✓] RMSE calculated
+[✓] Spectral Angle Mapper calculated
+[✓] Per-band reconstruction quality evaluated
+[✓] Ground-truth vs predicted visualization performed
+[✓] Three-subject per-band averages calculated
+[✓] Lower/higher-error wavelength regions identified
+[✓] Downstream-use limitation established
+[✓] Biological/clinical claims explicitly excluded
+
+Final statement:
+
+The SpectraDerm RGB-to-spectral reconstruction component is technically
+operational, quantitatively evaluated, and ready for controlled experimental
+downstream development, but it is not yet validated for clinical or
+biological interpretation.

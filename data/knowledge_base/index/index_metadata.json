@@ -1,0 +1,32 @@
+{
+  "chunk_ids": [
+    "medlineplus-skin-pigmentation-disorders:chunk-0001",
+    "medlineplus-skin-pigmentation-disorders:chunk-0002",
+    "medlineplus-patchy-skin-color:chunk-0001",
+    "medlineplus-patchy-skin-color:chunk-0002",
+    "aad-hyperpigmentation-dark-spots:chunk-0001",
+    "aad-hyperpigmentation-dark-spots:chunk-0002",
+    "aad-rosacea-signs-symptoms:chunk-0001",
+    "aad-rosacea-signs-symptoms:chunk-0002",
+    "aad-atopic-dermatitis-symptoms:chunk-0001",
+    "aad-atopic-dermatitis-symptoms:chunk-0002",
+    "aad-acne-signs-symptoms:chunk-0001",
+    "aad-acne-signs-symptoms:chunk-0002",
+    "nhs-melanoma-symptoms:chunk-0001",
+    "nhs-melanoma-symptoms:chunk-0002"
+  ],
+  "created_at_utc": "2026-09-16T13:04:52.714523+00:00",
+  "embedding_dimension": 384,
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "indexed_chunk_count": 14,
+  "normalization": "l2",
+  "source_ids": [
+    "aad-acne-signs-symptoms",
+    "aad-atopic-dermatitis-symptoms",
+    "aad-hyperpigmentation-dark-spots",
+    "aad-rosacea-signs-symptoms",
+    "medlineplus-patchy-skin-color",
+    "medlineplus-skin-pigmentation-disorders",
+    "nhs-melanoma-symptoms"
+  ]
+}

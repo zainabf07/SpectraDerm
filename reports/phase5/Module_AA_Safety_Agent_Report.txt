@@ -1,0 +1,50 @@
+SpectraDerm Module AA: Safety Agent
+====================================
+
+Objective and position
+----------------------
+AA is an engineering safety gate for downstream presentation/action. It sits
+after Vision Agent X, Monitoring Agent Y, and Evidence Agent Z, and before a
+future Orchestrator AD. AA is not a diagnostic system, does not calculate
+medical risk, does not interpret raw images, does not calculate anomaly/change
+scores, does not establish disease progression, does not treat estimated
+spectral information as measured spectroscopy, and does not prescribe treatment.
+
+Inputs and outputs
+------------------
+SafetyAgentInput accepts optional opaque X/Y/Z outputs, explicit finding text,
+proposed action, generated text, and metadata. SafetyAgentResult exposes a
+serializable status, concern level, transparent claim assessments, a cautious
+professional-assessment flag, reasons, blocked/allowed claims, preserved
+evidence provenance, input availability summary, limitations, and safety text.
+Missing inputs stay missing.
+
+Deterministic safety decision architecture
+------------------------------------------
+AA never calls upstream modules. It first copies Z evidence provenance, then
+checks supplied presentation text using transparent patterns for diagnostic,
+disease-probability, disease-progression, biomarker/measurement, and treatment
+claims. Any blocked claim produces caution_required. With no blocked claim,
+missing finding/evidence or Z no_query/insufficient_evidence produces
+insufficient_evidence. Professional-assessment consideration is allowed only
+when retrieved source text itself contains an explicit professional-assessment
+context. Otherwise an appropriately qualified, evidence-backed result is
+safe_to_present.
+
+Evidence provenance and boundaries
+----------------------------------
+Chunk IDs, source IDs, titles, organizations, URLs, topics, and evidence text
+are preserved as supplied by Z; AA creates no citations or medical evidence.
+It does not duplicate Q/R/S calculation, W retrieval/prompt/LLM behavior, X
+vision interpretation, Y trend logic, or Z evidence coordination. Model
+change is never converted to probability, and increasing_change is never
+equated with disease progression. Module O/P remains evaluation-only.
+
+Testing, limitations, and future work
+--------------------------------------
+Synthetic tests cover safe, missing, insufficient, diagnostic, probability,
+progression, biomarker, treatment, provenance, referral-context, and
+determinism cases. Pattern checks are intentionally conservative and are not
+clinical NLP or a guarantee that arbitrary external text is safe. Future AD
+can consume AA's structured result; AA does not implement AD, product, or
+referral actions.

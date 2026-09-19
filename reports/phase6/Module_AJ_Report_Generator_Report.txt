@@ -1,0 +1,25 @@
+MODULE AJ — REPORT GENERATOR REPORT
+
+Purpose and relationship to X–AI
+AJ is the final deterministic composition layer before a frontend. It assembles already-computed structured outputs from X–AI and does not recalculate, reinterpret, or override any specialized module.
+
+Report structure and deterministic composition
+SpectraDermReport has fixed sections for scan information, summaries, visual findings, AI-estimated spectral representation, model-derived change, evidence, safety, next action, OTC categories, referral options, and limitations. Identical inputs produce identical section order and values.
+
+Evidence attribution
+AJ keeps supplied Evidence Agent explanation and source attribution separate from model-derived findings. When no evidence is supplied, it says evidence was not available rather than creating citations or medical claims.
+
+Safety authority and downstream gating
+Safety's explicit professional_assessment_recommended boolean is authoritative. True includes only supplied referral output and excludes products. False includes only supplied general OTC category output and excludes referrals. Missing/invalid safety blocks both downstream sections.
+
+Spectral and change-score wording
+AJ labels reconstruction as an AI-estimated spectral representation and never writes measured spectroscopy. Monitoring values remain model-derived change information and are never expressed as disease probability or physical deterioration.
+
+Privacy boundaries
+Only whitelisted pseudonymous scan/user metadata is shown. Precise location, location history, raw images, raw spectral cubes, and unrelated PII are not automatically added.
+
+Limitations and medical boundary
+AJ has no LLM, retrieval, web/API, ML, or medical decision logic. It cannot establish a medical condition, select a provider, invent evidence, invent products, or create referral results.
+
+Test results
+The focused AJ suite contains 20 deterministic tests covering structured composition, attribution, safety gating, missing data, non-fabrication, terminology, privacy, repeatability, and input preservation. Notebook JSON parsing is required and performed separately. Pytest was not run because Python is unavailable on PATH in this environment.

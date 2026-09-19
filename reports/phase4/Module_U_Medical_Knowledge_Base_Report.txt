@@ -1,0 +1,42 @@
+SpectraDerm Module U Step 1: Curated Medical Knowledge Base
+=============================================================
+
+Purpose
+-------
+Module U Step 1 creates a small, local, attribution-preserving corpus for a
+future RAG layer. It contains evidence/context only; it is not a diagnostic
+system and does not map SpectraDerm features to disease labels.
+
+Sources and scope
+-----------------
+The corpus contains exactly seven approved official sources: MedlinePlus pages
+on skin pigmentation disorders and patchy skin color; American Academy of
+Dermatology pages on dark spots, rosacea, atopic dermatitis, and acne; and the
+NHS page on melanoma symptoms. Topics are limited to pigmentation, visible
+color/redness or vascular appearance, inflammation-related appearance,
+surface/texture appearance, limited common-condition context, and warning
+signs/professional-assessment context.
+
+Implementation
+--------------
+Each locally cached cleaned source note has a deterministic source_id and a
+manifest entry with title, organization, official URL, topic/category, and
+retrieved_at. Chunk IDs are deterministic source_id:chunk-NNNN identifiers.
+The chunker uses ``##`` section headings and paragraph boundaries first, with a
+500-token target and 75-token overlap when splitting is required. Every chunk
+retains its source attribution metadata.
+
+Safety and limitations
+----------------------
+Source discussion of a condition does not mean SpectraDerm detects that
+condition. The corpus supplies retrieval context only; it contains no disease
+probabilities, clinical thresholds, or claims that RGB-derived estimated
+spectra are measured biomarkers. It does not add claims about collagen,
+water/NIR, or unsupported characteristics. Embeddings, vector search, RAG
+generation, agents, MCP, and user-facing systems are outside this step.
+
+Validation
+----------
+Tests check source registration, required metadata, deterministic IDs,
+non-empty cleaned text/chunks, preserved attribution, target/overlap behavior,
+unique IDs, approved URLs, and constrained source categories.

@@ -1,0 +1,36 @@
+SpectraDerm Module T: Change Visualization
+===========================================
+
+Purpose
+-------
+Module T creates deterministic, renderer-agnostic presentation data for the
+existing Module R personal baseline, Module S longitudinal comparison, and
+Module Q Change/Anomaly Score.
+
+Visualizations produced
+-----------------------
+The ChangeVisualization result supplies labeled feature rows for Personal
+Baseline versus Current Scan, including feature delta, absolute delta, relative
+change, comparison status, and direction. It also supplies a labeled
+Model-Derived Change Score panel containing Module Q's existing score,
+category, interpretation, and warnings. A consumer may render these data as a
+table, bars, or another user-interface element without changing the values.
+
+Inputs and interpretation
+-------------------------
+Module T directly consumes PersonalBaselineResult, LongitudinalComparison, and
+ChangeAnomalyResult. It does not recalculate Module Q or create new scores.
+Missing and unavailable comparisons remain explicitly labeled unavailable.
+
+Limitations and safety boundary
+-------------------------------
+The result contains feature-level presentation data, not a diagnosis, disease
+prediction, or clinical assessment. The Model-Derived Change Score is Module
+Q's feature-pattern score and is not a physically measured percentage of skin
+change. The implementation makes no clinical-validation claim.
+
+Image and feature-map scope
+---------------------------
+The R/S/Q result structures currently contain feature values, not paired image
+or feature-map data. Module T therefore does not invent image processing or a
+spatial difference map.

@@ -1,0 +1,40 @@
+MODULE AE — MCP SERVER REPORT
+
+1. Objective
+Module AE provides the MCP tool interface. It does not independently perform medical reasoning or make medical decisions.
+
+2. Why MCP is used in SpectraDerm
+MCP provides a standardized, typed tool boundary through which agents can access existing module capabilities and future services.
+
+3. MCP architecture
+Agents -> genuine official Python MCP server -> injected SpectraDerm capability or future service -> structured result. AE validates contracts and delegates; it does not recreate internal algorithms.
+
+4. Registered tools
+Exactly ten tools are registered: reconstruct_spectrum, analyze_skin, extract_features, calculate_warning_score, compare_scans, retrieve_evidence, get_skin_history, find_dermatologists, get_otc_product_categories, and generate_report. get_partner_products is absent.
+
+5. Tool input/output contracts
+Tools accept explicit object inputs (or validated location/radius/specialty inputs for provider search) and return the same structured envelope: success, error_code, message, data.
+
+6. Delegation architecture
+Each capability is constructor-injected. Existing/future services own their analysis, retrieval, history, reporting, or provider logic; AE only adapts calls.
+
+7. Error handling
+Invalid input, unavailable services, unknown tools, and service failures return machine-readable errors. Exception details are not exposed in normal tool responses.
+
+8. Safety boundaries
+AE makes no diagnosis, disease probability, risk, treatment, referral-necessity, provider, evidence, or product-information claim. It does not inspect spectra or turn estimated spectra into medical facts.
+
+9. Dermatologist referral integration boundary
+find_dermatologists() is an interface for future dermatologist/location integration. Real Google Places/Maps integration belongs to Module AI. AE neither accesses device location nor stores location.
+
+10. OTC product-category integration boundary
+get_otc_product_categories() replaces the obsolete partner-product capability. SpectraDerm's current MVP recommends general OTC skincare categories rather than specific brands or partner products.
+
+11. Testing/validation
+The focused AE suite contains 24 deterministic fake-service tests. It covers registration, schemas, delegation, validation, structured errors, safety language, no mutation, and provider boundaries. Pytest was not run because Python is unavailable on PATH in this environment.
+
+12. Limitations
+Future history, report, and provider backends must be injected. AE supplies no credentials, external calls, persistent storage, user management, or frontend.
+
+13. Future Module AI integration
+Module AI can implement a provider behind the injected find_dermatologists() interface, including a future Google Places/Maps integration. No such integration is implemented in AE.

@@ -1,0 +1,49 @@
+SpectraDerm Module X: Vision Agent
+===================================
+
+Objective
+---------
+Provide a lightweight, deterministic orchestration layer that interprets
+already-produced SpectraDerm structured outputs. It is not a computer-vision
+model and never accepts or inspects a raw image.
+
+Architecture and inputs
+-----------------------
+Existing image-quality, localization, spectral-reconstruction, spectral-feature,
+monitoring/change, and optional ML outputs are supplied in VisionAgentInput.
+Each input is optional and may be an existing result object or a structured
+mapping. VisionAgent preserves each supplied output in a ComponentSummary,
+marks missing outputs unavailable, and makes no call to analysis modules.
+
+Outputs and deterministic interpretation logic
+----------------------------------------------
+VisionAgentResult contains engineering overall_status, a structured finding,
+component summaries, available evidence names, limitations, and fixed safety
+language. The only status rules are: rejected/failed supplied image quality
+maps to insufficient_quality; an explicit supplied Higher Change/review
+category maps to review_recommended; an explicit supplied Monitor category
+maps to change_detected; all other cases map to no_actionable_change. It never
+reads a score threshold, recomputes Module Q/R/S, or turns change into risk.
+
+Relationship to Modules I-W and RAG integration
+------------------------------------------------
+Modules I-W are not modified or imported for execution. Module O/P ACNE04 is
+not connected and remains evaluation-only. The result's structured_finding is
+a future optional handoff point to Module W: Vision Agent -> structured finding
+-> Module W retrieval -> attributed evidence -> language explanation. RAG and
+LLMs are not required by Module X.
+
+Safety boundaries and limitations
+---------------------------------
+The agent does not diagnose, supply disease probabilities, medical severity,
+or clinical risk percentages. It treats reconstruction as supplied estimated
+output rather than measured spectroscopy, and does not call spectral or RGB
+features biological biomarkers. It cannot resolve missing components or
+validate upstream outputs; professional assessment language is confined to
+the fixed safety boundary and existing evidence/warning context.
+
+Validation
+----------
+Unit tests cover complete and partial inputs, unavailable fields, supplied and
+absent optional ML, deterministic results, non-fabrication, score/probability
+boundaries, estimated-spectrum wording, no O/P requirement, and safety text.

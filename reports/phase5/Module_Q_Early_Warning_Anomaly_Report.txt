@@ -1,0 +1,72 @@
+SpectraDerm Module Q: Subtle Skin-Pattern Change / Anomaly Analysis
+====================================================================
+
+Purpose
+-------
+Module Q is a deterministic, transparent engineering layer that compares a
+current Module N feature representation with selected reference/history
+observations. It reports the degree to which the observed feature pattern
+differs from the selected reference pattern.
+
+Problem definition and terminology
+----------------------------------
+The output is called the Change/Anomaly Score. It is a bounded feature-pattern
+change magnitude, not a clinical prediction. Change/Anomaly Score is not a
+disease probability.
+
+Inputs and reference/history
+----------------------------
+The input is a current Module N CombinedFeatureResult (its current RGB and
+estimated-spectral features) or an equivalent namespaced feature mapping, plus
+an iterable of selected reference/history observations. For each feature,
+Module Q uses the history-only median as reference value b and history-only
+IQR as the scale. Module R may later supply the selected reference history.
+Temporal features are deliberately not fabricated or scored in Q v1.
+
+History requirement
+-------------------
+The configurable minimum_reference_observations default is four. This is an
+engineering requirement for estimating reference variability, not a clinical
+justification. Below that amount, Module Q returns an insufficient reference
+history state with no score or category.
+
+IQR feature scaling and exclusions
+----------------------------------
+For each comparable feature, IQR = Q75 - Q25 is computed from reference
+history only. The normalized absolute change is abs(current - median(history))
+/ (IQR + 1e-8). The epsilon is numerical safety only. Non-finite or nonnumeric
+current/reference values are excluded without imputation. A zero-IQR feature is
+also excluded rather than being converted into an arbitrary large score.
+
+Group handling and score mapping
+--------------------------------
+RGB and estimated spectral feature distances are each the mean normalized
+absolute change in their valid group. When both are present their mean gives
+the overall D, so groups have equal influence regardless of feature counts. If
+only one group is comparable, it is used with a reduced-group-coverage warning.
+The bounded Change/Anomaly Score is 100 * (1 - exp(-D)).
+
+Categories
+----------
+Initial engineering thresholds are 0-39 Stable, 40-69 Monitor, and 70-100
+Higher Change. The initial category thresholds are engineering thresholds and
+are not clinically validated.
+
+Example interpretation
+----------------------
+"The observed feature pattern differs from the selected reference pattern;
+further monitoring may be appropriate."
+
+Safety boundary and limitations
+-------------------------------
+Module Q does not report disease probability, diagnosis, disease risk,
+abnormality probability, clinical severity, or medical prediction. It does not
+learn a disease model or calibrate clinical thresholds. Output reliability is
+limited by reference-history quantity, representativeness, feature quality,
+and the fact that estimated spectral features originate from RGB reconstruction.
+
+Future Module R integration
+---------------------------
+Module Q intentionally accepts a reference/history object independently of how
+it was selected. Module R can later provide a personal baseline and temporal
+reference selection without changing the Q v1 scoring formula.

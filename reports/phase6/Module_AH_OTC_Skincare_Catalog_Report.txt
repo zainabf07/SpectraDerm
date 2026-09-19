@@ -1,0 +1,25 @@
+MODULE AH — OTC SKINCARE KNOWLEDGE/CATALOG REPORT
+
+Purpose
+AH is a small, controlled, read-only knowledge/catalog layer for general OTC skincare categories and neutral supporting information. It is not a commercial partner-product database.
+
+AH versus AB
+AH exposes static category relevance metadata. Module AB remains the frozen decision/recommendation agent responsible for deciding whether controlled category information is appropriate. AH makes no recommendation, referral, or safety decision and does not invoke AB.
+
+Controlled vocabulary and categories
+The catalog supports only pigmentation, redness_irritation, acne_like_texture, dryness_barrier, and unknown. It includes the specified brand-neutral categories with stable IDs, example ingredient types, precautions, and jurisdiction notes where relevant. Unknown returns no targeted category.
+
+Neutral wording and safety boundaries
+Entries use appearance-focused wording. They do not diagnose a condition, assign probability/risk, prescribe a plan, promise a cure, claim a guaranteed result, or turn a model-derived appearance pattern into a confirmed medical condition.
+
+Jurisdiction-dependent OTC status
+Entries for ingredients/categories with variable OTC status state that availability, concentration, formulation, and regulation vary by jurisdiction. AH makes no claim that a category is OTC universally.
+
+Privacy boundaries
+The catalog contains no users, scans, locations, images, provider data, brands, prices, partner fields, affiliate links, shopping URLs, or commercial ranking.
+
+Limitations and future expansion
+The catalog is intentionally static and version controlled. It does not retrieve web information or track local regulation. Categories can be expanded later while retaining the same read-only query interface and without changing AB's decision interface.
+
+Test results
+The focused AH suite contains 20 deterministic tests covering category presence, mappings, unsupported inputs, immutability, neutral/commercial/privacy boundaries, jurisdiction notes, and repeatability. Pytest was not run because Python is unavailable on PATH in this environment.

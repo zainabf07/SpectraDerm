@@ -1,0 +1,44 @@
+SpectraDerm Module U Step 2: Embeddings and Vector Retrieval
+=============================================================
+
+Purpose
+-------
+Module U Step 2 adds retrieval only over the frozen Module U Step 1 curated
+knowledge chunks. Retrieval returns attributed evidence candidates; it does not
+generate answers, make diagnoses, or make clinical conclusions.
+
+Embedding approach
+------------------
+The implementation uses FastEmbed's CPU/ONNX text-embedding interface with
+BAAI/bge-small-en-v1.5 by default. Text embeddings are explicitly L2-normalized
+after generation. The actual embedding dimension is recorded from the model at
+index-build time rather than assumed by application code.
+
+Index and persistence
+---------------------
+build_index embeds the existing Step 1 chunks and writes data/knowledge_base/
+index/embeddings.npy, chunks.json, and index_metadata.json. Metadata records
+the model name, embedding dimension, indexed chunk count, source IDs, chunk
+IDs, creation timestamp, and L2-normalization configuration. No model cache is
+stored in the repository. The index is rebuildable solely from frozen Step 1
+chunks and the configured embedding model.
+
+Retrieval
+---------
+VectorRetriever L2-normalizes the stored matrix and query vector, computes
+NumPy dot products as cosine similarity, orders candidates by descending score
+with chunk-ID tie breaking, and returns at most top_k results. Each result
+retains exact chunk text and source ID, title, organization, URL, and topic.
+Representative retrieval queries cover pigmentation/melanin, visible redness,
+and professional-assessment/warning-sign context.
+
+Validation and limitations
+--------------------------
+Focused tests use a deterministic injected embedding backend to validate shapes,
+finite values, normalization, index persistence, ranking, top-K limits,
+attribution, repeatability, and domain query routing without downloading a
+model during unit tests. Runtime validation with FastEmbed remains required in
+the local Python environment. Retrieval is not RAG generation and does not
+mean SpectraDerm detects acne, rosacea, eczema, melanoma, or any other disease.
+It creates no disease probabilities, clinical thresholds, or claims that
+estimated spectra are measured biomarkers.

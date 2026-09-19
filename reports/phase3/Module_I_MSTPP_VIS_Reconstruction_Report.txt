@@ -1,0 +1,62 @@
+
+SpectraDerm - Module I
+RGB-to-VIS Spectral Reconstruction
+===================================
+
+Model
+-----
+Architecture: MST++
+Input: RGB, 3 channels
+Output: VIS, 31 spectral bands
+Spectral range: 400-700 nm
+Spectral interval: 10 nm
+Crop size: 128x128
+
+Training
+--------
+Dataset: Hyper-Skin VIS
+Training pairs used for prototype experiment: 10
+Epochs: 10
+Optimizer: Adam
+Learning rate: 4e-4
+Loss: L1
+Best epoch: 10
+Best training L1: 0.090202
+
+Held-out Evaluation
+--------------------
+Held-out samples: 3
+Mean L1: 0.063475
+Mean SAM: 0.147687 radians
+Mean PSNR: 21.31 dB
+
+Per-band Evaluation
+-------------------
+Best band: 450 nm
+Best-band MAE: 0.035694
+
+Highest-error band: 650 nm
+Highest-error MAE: 0.103687
+
+Observed Pattern
+----------------
+The reconstructed spectral curve generally follows the ground-truth
+spectral shape. Agreement is stronger in the lower/middle VIS range,
+while larger deviations appear toward approximately 610-700 nm.
+
+Limitations
+-----------
+This is a preliminary prototype experiment using only 10 training
+pairs and 3 held-out samples. The results are not a clinical accuracy
+claim and should not be interpreted as disease-detection performance.
+
+The reconstructed spectra are AI-estimated spectra, not measured
+spectra. Spectral reconstruction error and anomaly scores must not be
+interpreted as disease probability.
+
+Checkpoint
+----------
+/content/drive/MyDrive/spectraderm/checkpoints/mstpp_hyperskin_vis_best_10pairs.pth
+
+Generated:
+2026-09-09T05:46:29.003484

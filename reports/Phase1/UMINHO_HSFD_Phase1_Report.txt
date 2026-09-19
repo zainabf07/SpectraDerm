@@ -1,0 +1,47 @@
+SpectraDerm — UMINHO-HSFD Phase 1 Report
+==================================================
+
+DATASET
+-------
+Dataset: University of Minho Hyperspectral Images of Faces Database
+Samples: 29 face images
+Spectral range: 400–720 nm
+Spectral interval: 10 nm
+Spectral bands: 33
+License: CC-BY 4.0
+
+PAIRING
+-------
+RGB files: 29
+Reflectance files: 29
+Unmatched pairs: 0
+Pairing validation: PASSED
+
+PREPROCESSING
+-------------
+RGB normalization: uint8 [0,255] -> float32 [0,1]
+Reflectance normalization: original scale preserved
+RGB output size: 256x256x3
+Reflectance output size: 256x256x33
+NaN/Inf validation: PASSED
+Paired augmentation: horizontal flip supported
+
+SPLIT
+-----
+Train faces: 20
+Validation faces: 4
+Test faces: 5
+Split strategy: subject-aware
+Random seed: 42
+Subject overlap: NONE
+
+IMPORTANT LIMITATIONS
+---------------------
+UMINHO-HSFD contains only 29 subjects.
+Skin-tone groups are strongly imbalanced.
+The RGB images are rendered from hyperspectral reflectance
+and should therefore not be treated as an independently captured
+RGB modality.
+Zero reflectance values represent artificial black background.
+The dataset is primarily suitable for spectral/skin analysis
+and validation rather than disease-classifier training.

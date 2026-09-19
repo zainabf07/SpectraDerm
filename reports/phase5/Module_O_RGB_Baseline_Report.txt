@@ -1,0 +1,172 @@
+SpectraDerm — Module O: RGB Baseline Model
+Evaluation Report
+
+PURPOSE
+-------
+Module O establishes the RGB-only downstream machine-learning baseline for SpectraDerm.
+
+Question:
+How well can the selected supervised skin-analysis task be performed using ordinary RGB-derived features alone?
+
+Module O is an evaluation/validation module. Its classifier is NOT a production model for the SpectraDerm application.
+
+DATASET
+-------
+Dataset: ACNE04
+
+The clean experimental dataset contained 1,390 images after duplicate/conflicting-label handling.
+
+Leakage-safe split:
+- Training: 1,112 images
+- Test: 278 images
+- Duplicate leakage between train and test: 0
+
+Clean label distribution:
+- Class 0: 488
+- Class 1: 615
+- Class 2: 172
+- Class 3: 115
+
+FEATURE REPRESENTATION
+----------------------
+Module O uses RGB-derived features only.
+
+Module L produced 37 feature fields in total. Thirteen ROI/shape-dependent fields were undefined for some images and were not used in the final finite classifier matrix.
+
+Usable RGB features: 24.
+
+The features include color statistics, HSV statistics, grayscale/gradient/texture information, and explicitly non-biological pigmentation-related RGB proxy features.
+
+MODEL
+-----
+Official baseline:
+
+RandomForestClassifier(
+    n_estimators=300,
+    random_state=42,
+    class_weight="balanced",
+    n_jobs=-1
+)
+
+The original untuned Random Forest is the frozen official Module O baseline.
+
+RESULTS
+-------
+Official RGB-only Random Forest:
+
+Accuracy:            48.56%
+Balanced Accuracy:   40.44%
+Macro Precision:     50.18%
+Macro Recall:        40.44%
+Macro F1:            41.17%
+
+Classification report:
+
+Class 0:
+  Precision: 55.88%
+  Recall:    37.25%
+  F1:        44.71%
+  Support:   102
+
+Class 1:
+  Precision: 45.30%
+  Recall:    78.10%
+  F1:        57.34%
+  Support:   105
+
+Class 2:
+  Precision: 30.77%
+  Recall:     9.76%
+  F1:        14.81%
+  Support:    41
+
+Class 3:
+  Precision: 68.75%
+  Recall:    36.67%
+  F1:        47.83%
+  Support:    30
+
+Confusion matrix:
+[[38, 59,  4,  1],
+ [21, 82,  1,  1],
+ [ 7, 27,  4,  3],
+ [ 2, 13,  4, 11]]
+
+CLASSIFIER COMPARISON
+---------------------
+Controlled comparison on the same evaluation setup:
+
+Random Forest:
+- Accuracy: 48.56%
+- Balanced Accuracy: 40.44%
+- Macro F1: 41.17%
+
+Logistic Regression:
+- Accuracy: 43.88%
+- Balanced Accuracy: 45.17%
+- Macro F1: 43.11%
+
+SVM:
+- Accuracy: 46.04%
+- Balanced Accuracy: 48.12%
+- Macro F1: 46.35%
+
+XGBoost:
+- Accuracy: 45.68%
+- Balanced Accuracy: 37.92%
+- Macro F1: 38.21%
+
+The Random Forest remains the official Module O baseline because it was selected as the primary baseline.
+
+TUNING EXPERIMENT
+-----------------
+A separate training-only tuning experiment was performed.
+
+The best tuned Random Forest used:
+- n_estimators = 300
+- max_depth = None
+- max_features = sqrt
+- min_samples_leaf = 2
+
+Held-out test performance:
+- Accuracy: 47.48%
+- Balanced Accuracy: 41.90%
+- Macro F1: 41.99%
+
+Because tuning did not improve the official held-out result, the original 48.56% model remains frozen as the official baseline.
+
+INTERPRETATION
+--------------
+The RGB-only model demonstrates that ordinary RGB-derived features contain useful information for the selected supervised benchmark, but performance is limited.
+
+Class imbalance and subtle differences between severity classes affect performance. Class 2 has particularly low recall.
+
+This result is NOT clinical diagnostic accuracy. ACNE04 is used as a downstream evaluation benchmark.
+
+PRODUCTION BOUNDARY
+-------------------
+rgb_baseline_random_forest.pkl is an evaluation artifact only.
+
+It is retained to reproduce Module O but MUST NOT be loaded by the SpectraDerm production application.
+
+rgb_baseline_random_forest_tuned.pkl is an auxiliary tuning artifact and is also not a production model.
+
+LIMITATIONS
+-----------
+1. ACNE04 is cross-sectional and does not validate longitudinal personal skin monitoring.
+2. The dataset is imbalanced.
+3. Some severity classes are difficult to separate.
+4. The experiment does not establish medical diagnostic performance.
+5. No disease diagnosis should be inferred from this classifier.
+6. Results depend on the selected features, preprocessing, split, and model.
+7. The classifier is for evaluation, not deployment.
+
+CONCLUSION
+----------
+Module O establishes the frozen RGB-only reference:
+
+Accuracy = 48.56%
+Balanced Accuracy = 40.44%
+Macro F1 = 41.17%
+
+This provides the controlled baseline for Module P.

@@ -1,0 +1,54 @@
+SpectraDerm — Hyper-Skin Phase 1 Report
+==================================================
+
+DATASET
+-------
+Dataset: Hyper-Skin
+Role: Primary dataset for RGB-to-spectral reconstruction
+RGB samples: 306
+VIS samples: 306
+Matched RGB-VIS pairs: 306
+Subjects: 51
+Spectral bands: 31
+VIS data format: MATLAB v7.3 / HDF5
+VIS variable: cube
+Original VIS shape: (31, 1024, 1024)
+Pipeline spectral shape: (1024, 1024, 31)
+
+DATASET SPLIT
+-------------
+Train: 264 samples / 44 subjects
+Validation: 18 samples / 3 subjects
+Test: 24 samples / 4 subjects
+Total subjects: 51
+Subject overlap between splits: NONE
+
+PREPROCESSING
+-------------
+RGB normalization: uint8 [0,255] -> float32 [0,1]
+VIS conversion: float32 with original scale preserved
+Output RGB size: 256x256x3
+Output VIS size: 256x256x31
+RGB/VIS spatial alignment: PASSED
+Data quality validation: PASSED
+NaN/Inf validation: PASSED
+Paired augmentation: PASSED
+Subject-aware split validation: PASSED
+Final preprocessing pipeline: PASSED
+
+MANIFEST
+--------
+Manifest: hyperskin_manifest.csv
+RGB entries: 306
+VIS entries: 306
+Unmatched pairs: 0
+Manifest validation: PASSED
+
+IMPORTANT NOTES
+---------------
+Hyper-Skin is the primary dataset for RGB-to-spectral reconstruction.
+The reconstructed spectral output represents AI-estimated spectral
+information and should not be described as directly measured
+hyperspectral or multispectral data.
+No wavelength metadata was identified in the inspected VIS files.
+Therefore, specific wavelength values should not be invented.

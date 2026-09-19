@@ -1,0 +1,5 @@
+## What causes hyperpigmentation?
+The American Academy of Dermatology explains that dark spots and patches can occur when something triggers extra melanin production. Its page gives examples including a pimple or psoriasis patch clearing, healing after an injury, certain medicines, irritation from a skin or hair-care product, and hormonal changes.
+
+## Context
+The page describes post-inflammatory hyperpigmentation as one cause of dark spots. It also emphasizes finding the cause of dark spots or patches. This is limited appearance context from the cited source; it is not a diagnostic label or an inference from RGB-derived or estimated spectral features.

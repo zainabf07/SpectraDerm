@@ -1,0 +1,46 @@
+SpectraDerm Module Y: Monitoring Agent
+=======================================
+
+Objective
+---------
+Coordinate and interpret existing Module Q, R, and S outputs with supplied
+historical records. Module Y does not reproduce any of their numerical
+algorithms and does not provide diagnosis, disease probability, or risk.
+
+Relationship to Q/R/S, inputs, and outputs
+-------------------------------------------
+Module R baseline/reference information, Module S current comparison, and
+Module Q change/anomaly output are accepted as already-computed opaque inputs.
+HistoricalScanRecord preserves scan ID, timestamp, optional change score,
+status, and summary. MonitoringAgentResult keeps raw inputs in evidence_inputs
+separate from current status, trend, scores, summary, limitations, and safety
+message.
+
+Historical handling and trend logic
+-----------------------------------
+Records are ordered deterministically by timestamp then scan ID. Only finite
+supplied change scores are valid. Fewer than two valid scores produces
+insufficient_history. With three or more valid scores, every successive score
+must be strictly greater for increasing_change. Otherwise, if maximum minus
+minimum is at most 2.0 fixed engineering score points, the trend is stable;
+all other cases are changed. Two scores can never produce increasing_change.
+The score range is an engineering consistency rule, not a clinical threshold.
+
+Safety boundaries and limitations
+---------------------------------
+An increase refers only to the supplied model-derived change score and is not
+proof of disease progression. Scores are never converted into disease or
+cancer probability, medical severity, clinical risk, or diagnosis. Estimated
+spectral information is not measured spectroscopy. Missing values remain
+missing, and professional assessment is not recommended merely because a score
+increases. The agent cannot validate upstream records or establish a trend
+from insufficient history.
+
+Deterministic validation and future integration
+-----------------------------------------------
+Tests use synthetic records for insufficient, stable, changed, increasing, and
+non-monotonic histories, timestamp ordering, missing fields, raw Q/S
+preservation, determinism, and safety boundaries. Its structured result is
+intended for future composition with Vision Agent X, Evidence Agent Z, Safety
+Agent AA, and a later Orchestrator AD; none of those future agents is created
+here.

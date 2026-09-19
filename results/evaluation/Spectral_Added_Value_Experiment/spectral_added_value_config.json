@@ -1,0 +1,21 @@
+{
+  "question": "Does adding MST++ reconstructed spectral features improve prediction of wavelength-specific VIS properties?",
+  "dataset": "Hyper-Skin",
+  "train_subjects": 12,
+  "train_images": 72,
+  "test_subjects": 4,
+  "test_images": 24,
+  "rgb_features": 24,
+  "spectral_features": 84,
+  "combined_features": 108,
+  "targets": [
+    "mean_550_nm",
+    "mean_650_nm",
+    "ratio_550_650"
+  ],
+  "model": "RandomForestRegressor",
+  "n_estimators": 300,
+  "random_state": 42,
+  "spectral_status": "AI-estimated, not measured",
+  "temporal_features_used": false
+}

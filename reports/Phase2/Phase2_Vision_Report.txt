@@ -1,0 +1,245 @@
+SPECTRADERM — PHASE 2 VISION REPORT
+====================================
+
+Phase:
+    Phase 2 — Computer Vision Foundations
+
+Status:
+    Implemented and tested.
+    Baseline components requiring broader validation are explicitly
+    documented as provisional.
+
+Modules Completed:
+    F — Image Quality Assessment
+    G — Skin Detection / Segmentation
+    H — Region / ROI Localization
+
+
+MODULE F — IMAGE QUALITY ASSESSMENT
+-----------------------------------
+
+Purpose:
+    Assess whether an RGB image is sufficiently usable for downstream
+    SpectraDerm processing.
+
+Implemented quality dimensions:
+    - Blur / sharpness
+    - Mean exposure
+    - Exposure clipping
+    - Lighting uniformity
+    - Resolution
+    - Framing / visible content
+
+Output:
+    Quality status:
+        GOOD
+        REVIEW
+        REJECT
+
+Safety boundary:
+    Image quality assessment is not diagnosis and does not establish
+    disease presence or absence.
+
+Testing:
+    Automated tests: 15 passed.
+
+Real-image validation:
+    Hyper-Skin sample:
+        p001_neutral_front.jpg
+        Overall status: REVIEW
+
+        Reasons:
+            - Image may be somewhat blurred.
+            - Image may be underexposed.
+            - Lighting may be uneven.
+
+    UMINHO-HSFD sample:
+        207_RGB_pixelized.jpg
+        Overall status: REVIEW
+
+        Reasons:
+            - Some pixels may be clipped.
+            - Lighting may be uneven.
+
+Blur calibration experiment:
+    Controlled Gaussian degradation was applied to both datasets.
+
+    Hyper-Skin:
+        Original: 110.83
+        Mild blur: 9.37
+        Strong blur: 1.61
+
+    UMINHO-HSFD:
+        Original: 880.95
+        Mild blur: 46.71
+        Strong blur: 3.93
+
+    Observation:
+        The blur metric decreased consistently as controlled blur
+        increased for both datasets.
+
+Threshold status:
+    Current blur thresholds are provisional engineering thresholds.
+    They are NOT clinically validated and require broader calibration
+    on a representative evaluation set before deployment.
+
+
+MODULE G — SKIN DETECTION / SEGMENTATION
+----------------------------------------
+
+Purpose:
+    Identify candidate skin pixels so downstream processing can focus
+    on relevant skin regions.
+
+Implementation:
+    Explainable color-based baseline using:
+        - YCrCb
+        - HSV
+        - normalized RGB features
+        - morphological processing
+        - connected-component filtering
+
+Output:
+    Binary skin mask
+    Skin fraction
+    Segmentation method metadata
+
+Testing:
+    Automated tests: 18 passed.
+
+Real-image testing:
+
+    Hyper-Skin:
+        Skin fraction: 2.46%
+
+    UMINHO-HSFD:
+        Skin fraction: 81.14%
+
+Observation:
+    The baseline behaves substantially differently across the two
+    datasets. Visual inspection showed that the Hyper-Skin baseline
+    mask captures only small regions of the visible face.
+
+Validation status:
+    BASELINE IMPLEMENTED — NOT YET VALIDATED
+
+    The current implementation must not be treated as a production
+    quality skin segmentation model.
+
+Safety boundary:
+    Skin segmentation identifies candidate skin pixels only.
+    It is not lesion detection, disease detection, or diagnosis.
+
+
+MODULE H — REGION / ROI LOCALIZATION
+------------------------------------
+
+Purpose:
+    Generate candidate regions of interest from the skin mask for
+    downstream analysis and future longitudinal comparison.
+
+Implementation:
+    Connected-component analysis over the supplied skin mask.
+
+Output:
+    Candidate bounding boxes
+    Candidate area
+    Candidate score
+    Localization method metadata
+
+Testing:
+    Automated tests: 26 total project tests passed after adding
+    localization edge-case coverage.
+
+Edge cases tested:
+    - Empty masks
+    - Multiple regions
+    - Border-touching regions
+    - Invalid numeric values
+    - Invalid mask dimensions
+    - Invalid minimum-area fractions
+
+Real-image testing:
+
+    Hyper-Skin:
+        Skin fraction: 2.46%
+        Candidate regions: 2
+
+    UMINHO-HSFD:
+        Skin fraction: 81.14%
+        Candidate regions: 1
+        Candidate bounding box:
+            (0, 4, 615, 916)
+
+Observation:
+    The localization pipeline functions correctly, but the quality
+    of its real-world ROIs depends directly on the quality of the
+    upstream segmentation mask.
+
+Validation status:
+    IMPLEMENTED — BASELINE NOT YET ACCURACY-VALIDATED
+
+Safety boundary:
+    Candidate ROI localization does not identify a lesion or disease.
+    Candidate regions must not be presented as diagnostic findings.
+
+
+INTEGRATION
+-----------
+
+Current Phase 2 pipeline:
+
+    RGB Image
+        |
+        v
+    Image Quality Assessment
+        |
+        v
+    Skin Segmentation
+        |
+        v
+    Candidate ROI Localization
+        |
+        v
+    Downstream SpectraDerm Analysis
+
+
+OVERALL PHASE 2 STATUS
+----------------------
+
+Phase 2 vision foundations are implemented and covered by automated
+tests.
+
+Final automated test count:
+    26 passed
+
+Important limitation:
+    Real-image testing demonstrated that the current lightweight
+    segmentation/localization baselines are not sufficient to claim
+    production or clinical accuracy.
+
+Future validation should use a larger, representative evaluation set
+and appropriate annotations where available.
+
+No component in Phase 2 should be described as diagnosing disease.
+
+
+DEFINITION OF DONE
+------------------
+
+[✓] Image quality assessment implemented
+[✓] Quality tests implemented
+[✓] Hyper-Skin real-image quality test completed
+[✓] UMINHO-HSFD real-image quality test completed
+[✓] Blur degradation experiment completed
+[✓] Skin segmentation baseline implemented
+[✓] Segmentation tests implemented
+[✓] Real-image segmentation evaluation completed
+[✓] Segmentation limitations documented
+[✓] ROI localization baseline implemented
+[✓] Localization tests implemented
+[✓] Localization edge cases tested
+[✓] Real-image ROI evaluation completed
+[✓] ROI limitations documented
+[✓] Safety boundaries documented
+[✓] Full automated test suite passing: 26 tests

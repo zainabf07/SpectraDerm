@@ -1,0 +1,41 @@
+{
+  "model": "RandomForestClassifier",
+  "n_estimators": 300,
+  "random_state": 42,
+  "class_weight": "balanced",
+  "feature_count": 835,
+  "train_samples": 1112,
+  "test_samples": 278,
+  "accuracy": 0.45323741007194246,
+  "balanced_accuracy": 0.3673122907699665,
+  "macro_precision": 0.41131794185083137,
+  "macro_recall": 0.3673122907699665,
+  "macro_f1": 0.3655376548255786,
+  "confusion_matrix": [
+    [
+      37,
+      58,
+      6,
+      1
+    ],
+    [
+      20,
+      77,
+      4,
+      4
+    ],
+    [
+      9,
+      25,
+      3,
+      4
+    ],
+    [
+      5,
+      12,
+      4,
+      9
+    ]
+  ],
+  "description": "RGB + MST++ estimated VIS spectral features"
+}

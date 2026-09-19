@@ -1,0 +1,34 @@
+MODULE AC — REFERRAL AGENT REPORT
+
+1. Objective
+Provide deterministic referral orchestration after Module AA reports that professional assessment should be considered.
+
+2. Referral workflow
+AA professional_assessment_recommended=True -> supplied location -> injected dermatology search provider -> normalized results -> deterministic ranked options.
+
+3. AC responsibilities
+AC reads the AA decision, accepts a transient manual or coordinate location, requests broad dermatology providers, normalizes returned business data, and returns a structured result. It does not search when AA is not affirmative.
+
+4. Input/output structure
+ReferralAgentInput contains safety_result, location, and radius_km. ReferralAgentResult contains status, AA decision, location_used, options, reason, safety_message, and metadata. Options use optional provider fields so missing data remains missing.
+
+5. Location handling
+The module never accesses a browser or device. It consumes supplied city/location or latitude/longitude only for the current call, copies supported fields, and does not persist location.
+
+6. Provider abstraction
+DermatologistSearchProvider is an injected Protocol with find_dermatologists(location, radius_km, specialty). No Google client, credentials, web call, or API integration exists in AC.
+
+7. Deterministic ranking
+Results rank by returned dermatology category match, then shorter returned distance, then presence of opening-hours information. Stable text tie-breakers make identical inputs repeatable. Missing values are never fabricated.
+
+8. Safety boundaries
+AC contains no diagnosis, disease identification/probability, treatment, medication, urgency, ratings, appointment, or best-provider claims. It does not override AA and always requests broad dermatology rather than a disease-specific specialty.
+
+9. Synthetic test/demo setup
+The test suite and notebook use fake, synthetic provider data only. The notebook has affirmative, non-referral, and missing-location demonstrations.
+
+10. Validation results
+The requested pytest command was attempted exactly as specified. This workspace has neither the `py` launcher nor a `python` executable available on PATH, so pytest could not be executed in this environment. The notebook JSON was successfully parsed with PowerShell and the focused AC suite contains 21 test functions covering gating, location inputs, provider errors, deterministic ranking, missing values, neutral language, no mutation, and dependency boundaries. Full pytest validation remains required in a Python-enabled project environment.
+
+11. Future Google API integration
+AC contains referral-agent logic only. Module AE will expose find_dermatologists() through MCP. Module AI will later connect that capability to an actual external dermatologist/location/business API such as Google Places/Maps. Google integration has not been implemented here.

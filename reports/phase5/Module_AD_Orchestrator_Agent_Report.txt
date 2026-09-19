@@ -1,0 +1,37 @@
+MODULE AD — ORCHESTRATOR AGENT REPORT
+
+1. Objective
+Coordinate existing SpectraDerm agents in a deterministic, structured workflow.
+
+2. Orchestrator architecture
+AD invokes Vision, Monitoring, Evidence, and Safety in order, then invokes exactly one safety-gated downstream branch: Product or Referral.
+
+3. Agent execution order
+Vision -> Monitoring -> Evidence -> Safety -> Product OR Referral. Each existing agent remains responsible for its own logic.
+
+4. Structured output flow
+AD retains each result object in OrchestratorResult. It passes Vision and Monitoring results into Evidence; it passes all three upstream results into Safety; then it passes the preserved outputs to the selected downstream agent.
+
+5. Safety gating
+Only the Safety Agent's boolean professional_assessment_recommended field selects referral versus product routing. A missing, invalid, or failed Safety result blocks both downstream actions.
+
+6. Product/referral routing
+True calls Referral only. False calls Product only when a Vision result or explicit Product input supports that path. AD records referral, product, or insufficient_information; it never selects both downstream paths.
+
+7. Failure handling
+Each agent call is isolated. Failures are explicit in errors while available upstream results remain present. Safety failures return blocked; Product and Referral failures return partial without discarding Safety or upstream outputs.
+
+8. Dependency injection/testing approach
+All six specialized agents are constructor-injected. Tests use deterministic fakes and do not access providers, APIs, MCP, credentials, raw images, or models.
+
+9. Safety boundaries
+The Orchestrator coordinates specialized agent outputs but does not independently make medical decisions. It contains no diagnosis, probability, risk, progression, referral, treatment, medication, score threshold, or disease-specific routing rule.
+
+10. Validation results
+The focused AD test file contains 21 deterministic test functions. Notebook JSON parsing was verified with PowerShell. Pytest was not run because no Python executable is available on PATH in this environment; no passing-test claim is made.
+
+11. Limitations
+AD is an in-process coordinator and requires injected agent instances. It does not provide external business search, location access, retrieval, LLM calls, API access, or persistent workflow state.
+
+12. Future MCP integration
+Future MCP integration will allow the orchestrator/agents to access capabilities through Module AE, but MCP is not implemented in AD.

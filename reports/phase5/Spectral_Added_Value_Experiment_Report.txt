@@ -1,0 +1,234 @@
+SpectraDerm — Spectral Added-Value Experiment
+Evaluation Report
+
+PURPOSE
+-------
+This experiment evaluates whether adding MST++-reconstructed VIS spectral features to RGB-derived features provides additional predictive information about wavelength-specific properties measured in actual Hyper-Skin VIS data.
+
+Research question:
+
+"When the same skin image is represented using RGB features alone versus RGB features plus MST++-reconstructed VIS spectral features, does the enriched representation better predict wavelength-specific properties measured in the actual VIS data?"
+
+This experiment is separate from the ACNE04 acne-severity classification experiment.
+
+DATASET AND GROUND TRUTH
+------------------------
+Dataset: Hyper-Skin
+
+For this focused experiment:
+- Training images: 72
+- Training subjects: 12
+- Test images: 24
+- Test subjects: 4
+- Total paired images: 96
+
+The split follows the official subject-level split structure. Test subjects are held out from training.
+
+Ground-truth targets are extracted directly from the actual Hyper-Skin VIS cube, not from MST++ predictions.
+
+Targets:
+1. mean_550_nm
+2. mean_650_nm
+3. ratio_550_650
+
+Canonical VIS wavelengths:
+400, 410, ..., 700 nm.
+
+FEATURE REPRESENTATIONS
+-----------------------
+RGB-only model:
+- 24 usable finite RGB-derived features from Module L.
+
+RGB + estimated spectral model:
+- 24 RGB features
+- 84 reconstructed spectral features from Module M
+- 108 combined features total
+
+The spectral features are extracted from the MST++ estimated 31-band VIS representation.
+
+Important distinction:
+The input spectral representation is AI-estimated, while the target values come from actual Hyper-Skin VIS measurements.
+
+MODELS
+------
+Both representations use the same Random Forest regression algorithm:
+
+RandomForestRegressor(
+    n_estimators=300,
+    random_state=42,
+    n_jobs=-1
+)
+
+No tuning was performed after observing test results.
+
+The comparison is controlled:
+- same images
+- same subjects
+- same train/test split
+- same targets
+- same regression algorithm
+- feature representation is the primary difference
+
+METRICS
+-------
+Because the targets are continuous spectral properties, classification accuracy is not the appropriate metric.
+
+Metrics:
+- MAE: lower is better.
+- RMSE: lower is better.
+- R2: higher is better.
+
+RESULTS
+-------
+Target: mean_550_nm
+
+RGB only:
+- MAE: 0.005862
+- RMSE: 0.006957
+- R2: 0.825712
+
+RGB + reconstructed spectral:
+- MAE: 0.005170
+- RMSE: 0.006528
+- R2: 0.846542
+
+Change:
+- MAE improvement: 11.81%
+- RMSE improvement: 6.17%
+- Delta R2: +0.020829
+
+
+Target: mean_650_nm
+
+RGB only:
+- MAE: 0.007117
+- RMSE: 0.008641
+- R2: 0.565718
+
+RGB + reconstructed spectral:
+- MAE: 0.007445
+- RMSE: 0.008800
+- R2: 0.549615
+
+Change:
+- MAE: -4.61% improvement (performance decreased)
+- RMSE: -1.84% improvement (performance decreased)
+- Delta R2: -0.016103
+
+
+Target: ratio_550_650
+
+RGB only:
+- MAE: 0.041133
+- RMSE: 0.052967
+- R2: 0.235166
+
+RGB + reconstructed spectral:
+- MAE: 0.033386
+- RMSE: 0.044474
+- R2: 0.460772
+
+Change:
+- MAE improvement: 18.84%
+- RMSE improvement: 16.03%
+- Delta R2: +0.225606
+
+SUMMARY
+-------
+Target             RGB R2    Combined R2    Delta R2
+mean_550_nm        0.825712  0.846542       +0.020829
+mean_650_nm        0.565718  0.549615       -0.016103
+ratio_550_650      0.235166  0.460772       +0.225606
+
+INTERPRETATION
+--------------
+The experiment provides positive evidence that adding MST++-reconstructed spectral features can improve prediction of some wavelength-specific VIS properties compared with RGB features alone.
+
+The strongest result is the 550/650 ratio:
+- MAE improved by 18.84%.
+- RMSE improved by 16.03%.
+- R2 increased from 0.235166 to 0.460772.
+
+Mean 550 nm reflectance also improved:
+- MAE improved by 11.81%.
+- R2 increased from 0.825712 to 0.846542.
+
+Mean 650 nm reflectance did not improve:
+- MAE increased by 4.61%.
+- R2 decreased by 0.016103.
+
+Therefore, the correct conclusion is NOT that spectral features improve every target.
+
+Supported conclusion:
+"On this paired Hyper-Skin experiment, adding MST++-reconstructed spectral features improved prediction of two of three tested wavelength-specific VIS properties, with the largest improvement observed for the 550/650 spectral ratio."
+
+RELATION TO MODULES O AND P
+---------------------------
+Module O and Module P evaluate a different question using ACNE04 acne-severity labels.
+
+Module O:
+- RGB-only Random Forest classifier
+- Accuracy: 48.56%
+- Balanced Accuracy: 40.44%
+- Macro F1: 41.17%
+
+Module P:
+- RGB + estimated spectral Random Forest classifier
+- Accuracy: 45.32%
+- Balanced Accuracy: 36.73%
+- Macro F1: 36.55%
+
+Thus, spectral enrichment did not improve the ACNE04 classification task.
+
+This is not contradictory to the current experiment because the targets differ:
+- O/P: supervised acne-severity classification.
+- Spectral Added-Value: prediction of actual wavelength-specific VIS properties.
+
+Together, the experiments support a nuanced conclusion: estimated spectral enrichment can show measurable value for some spectral-property prediction tasks, but it does not automatically improve every downstream classification task.
+
+LIMITATIONS
+-----------
+1. Only 12 training subjects and 4 held-out test subjects were used.
+2. The sample size is small and is not a general performance guarantee.
+3. MST++ reconstruction is AI-estimated, not direct spectral measurement.
+4. The experiment does not establish clinical validity or diagnostic utility.
+5. Only three spectral targets were evaluated.
+6. One target, mean_650_nm, did not improve.
+7. Results may depend on the selected features and Random Forest configuration.
+8. No claim is made that reconstructed spectra contain physically new information beyond the RGB image.
+9. The experiment evaluates representation/predictive utility, not medical diagnosis.
+
+REPRODUCIBILITY ARTIFACTS
+-------------------------
+Final results:
+spectral_added_value_results.csv
+
+Experiment configuration:
+spectral_added_value_config.json
+
+No trained regression .pkl is required as a final artifact because the regressors were used as controlled evaluation models rather than production models.
+
+PRODUCTION BOUNDARY
+-------------------
+This experiment does not define a production classifier.
+
+The SpectraDerm application should not use these temporary regression models for diagnosis or disease prediction.
+
+The purpose is to evaluate whether the reconstructed spectral representation has measurable wavelength-specific predictive value.
+
+CONCLUSION
+----------
+The experiment provides supporting evidence for SpectraDerm's spectral-enrichment concept.
+
+The strongest result is:
+
+RGB-only R2 for ratio_550_650: 0.235166
+RGB + estimated spectral R2:    0.460772
+
+with an 18.84% MAE improvement.
+
+The evidence is limited and does not establish clinical utility. The result should therefore be presented as representation-level validation rather than clinical validation.
+
+Final supported claim:
+
+"On paired Hyper-Skin data, adding MST++-reconstructed spectral features improved prediction of two of three tested wavelength-specific VIS properties compared with RGB features alone, particularly the 550/650 spectral ratio."

@@ -1,0 +1,34 @@
+MODULE AG — SCAN STORAGE REPORT
+
+Purpose
+AG stores and retrieves a pseudonymous user's longitudinal scan metadata and controlled artifact references. It does not perform analysis or store image bytes in its metadata records.
+
+Relationship with AF
+AG receives an injected AF-compatible user lookup boundary and accepts a scan only when its pseudonymous user_id exists. It does not alter AF's frozen implementation.
+
+Scan metadata model
+ScanRecord contains scan_id, user_id, timestamp, image_reference, feature_reference, analysis_reference, change_reference, and created_at. No names, emails, phone numbers, addresses, coordinates, or image byte field exists.
+
+Filesystem MVP architecture
+FileScanRepository persists small JSON metadata under a controlled private storage root. ScanStorage depends on repository and user-lookup protocols, so PostgreSQL and object storage can replace this MVP without changing callers.
+
+Ownership and access control
+Every get/delete operation requires user_id and returns no scan record for a different owner. The MVP does not claim full authenticated authorization; deployment still needs authenticated access control, encryption, backups, auditing, and infrastructure protections.
+
+Chronological history
+Per-user records are returned sorted by supplied scan timestamp, then scan ID for deterministic equal-time ordering.
+
+Deletion behavior
+Deleting one scan removes metadata and any referenced regular artifact files within AG's controlled root. Deleting a user's scans performs that cleanup for all their records. References outside the root cannot be supplied.
+
+Path traversal protection
+References must be non-empty, relative paths/identifiers. Absolute paths and traversal components, including Windows-style forms, are rejected. Cleanup resolves and verifies every path remains inside the storage root.
+
+Location/privacy boundary
+AG never automatically records latitude or longitude. It stores only pseudonymous IDs and artifact references; it has no PII, medical, provider, image-analysis, or image-byte handling.
+
+Limitations and future integration
+The JSON repository is local and single-process. Future PostgreSQL and object-storage implementations can satisfy the same repository/service interfaces. Production deployments need authenticated authorization, encryption, backups, retention rules, and operational controls.
+
+Test results
+The focused AG suite contains 16 deterministic test cases (including parameterized path checks) using temporary directories, synthetic users, and an injected clock. It covers creation, ownership, ordering, retrieval, deletion/cleanup, validation, privacy fields, persistence, and immutability. Pytest was not run because Python is unavailable on PATH in this environment.

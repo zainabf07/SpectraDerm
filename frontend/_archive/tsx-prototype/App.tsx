@@ -1,0 +1,12 @@
+import { useEffect,useState } from "react";
+import { api } from "./api/client";
+import { Shell,type Page } from "./layout/Shell";
+import { Home } from "./pages/Home";
+import { ScanPage } from "./pages/Scan";
+import { AnalysisPage } from "./pages/Analysis";
+import { ResultPage } from "./pages/Result";
+import { TimelinePage } from "./pages/Timeline";
+import { ExplanationPage,NextPage,ProductsPage,SettingsPage } from "./pages/Details";
+import type { Analysis,Scan } from "./types/api";
+
+export default function App(){const [page,setPage]=useState<Page>("home");const[userId,setUserId]=useState<string|null>(null);const[scanId,setScanId]=useState<string|null>(null);const[preview,setPreview]=useState("");const[analysis,setAnalysis]=useState<Analysis|null>(null);const[historyCount,setHistoryCount]=useState(0);useEffect(()=>{let active=true;const create=async()=>{const user=await api.createUser();if(active){localStorage.setItem("spectraderm-user",user.user_id);setUserId(user.user_id)}};const restore=async()=>{const saved=localStorage.getItem("spectraderm-user");try{if(!saved)return void await create();const user=await api.getUser(saved);if(active)setUserId(user.user_id)}catch(error){if((error as {status?:number}).status===404){localStorage.removeItem("spectraderm-user");try{await create()}catch{}}}};void restore();return()=>{active=false}},[]);useEffect(()=>{if(userId)void api.history(userId).then(h=>setHistoryCount(h.timeline.length)).catch(()=>setHistoryCount(0))},[userId,scanId]);const select=(scan:Scan)=>{setScanId(scan.scan_id);setPreview("");setAnalysis(null);setPage("result")};const content=page==="home"?<Home setPage={setPage} historyCount={historyCount}/>:page==="scan"?<ScanPage userId={userId} setPage={setPage} onScan={(id,p)=>{setScanId(id);setPreview(p);setAnalysis(null)}}/>:page==="analysis"?<AnalysisPage scanId={scanId} userId={userId} preview={preview} onDone={setAnalysis} setPage={setPage}/>:page==="result"?<ResultPage analysis={analysis} scanId={scanId} userId={userId} preview={preview} setPage={setPage} hasHistory={historyCount>1}/>:page==="timeline"?<TimelinePage userId={userId} onSelect={select}/>:page==="explanation"?<ExplanationPage scanId={scanId} userId={userId} setPage={setPage}/>:page==="next"?<NextPage analysis={analysis} setPage={setPage}/>:page==="products"?<ProductsPage scanId={scanId} userId={userId} analysis={analysis}/>:<SettingsPage/>;return <Shell page={page} setPage={setPage}>{content}</Shell>}

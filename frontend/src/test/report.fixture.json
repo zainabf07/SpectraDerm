@@ -1,0 +1,261 @@
+{
+ "scan": {
+  "scan_id": "scn_aYJrkxRsC9ArJPflBGjun_TbcG8tzoeV",
+  "display_id": "SD-005",
+  "scan_number": 5,
+  "date": "2026-09-18T08:03:17.307856+00:00",
+  "reference": {
+   "label": "Personal baseline — Scan 1",
+   "date": "2026-09-18T08:02:56.409970+00:00"
+  }
+ },
+ "overall": {
+  "tone": "change",
+  "status_label": "Change detected",
+  "headline": "Change detected — consider a professional assessment",
+  "summary": "A measurable change of 21% was detected in the monitored skin region compared with your personal baseline.",
+  "stage": "trend",
+  "change_score": 75.8,
+  "change_percent": 21.3,
+  "direction": "increased",
+  "trend": "increasing",
+  "trend_text": "Change is increasing compared with the previous scan.",
+  "reliability": {
+   "label": "Moderate",
+   "reasons": [
+    "Image may be underexposed.",
+    "Lighting may be uneven."
+   ]
+  },
+  "score_note": "This score represents deviation from your own baseline pattern. It is not a disease probability or diagnosis."
+ },
+ "detected_change": {
+  "available": true,
+  "overall_change_percent": 21.3,
+  "parameters": [
+   {
+    "label": "Pigmentation-related feature",
+    "baseline": 0.6822003456393558,
+    "current": 0.7587714429222576,
+    "change": 0.07657109728290179,
+    "change_percent": 11.2,
+    "direction": "increased"
+   },
+   {
+    "label": "Pigmentation-related spectral feature",
+    "baseline": 2.2594123402835873,
+    "current": 2.2935166726638725,
+    "change": 0.03410433238028521,
+    "change_percent": 1.5,
+    "direction": "unchanged"
+   },
+   {
+    "label": "Redness-related feature",
+    "baseline": 1.1438762490161767,
+    "current": 1.6508723780957522,
+    "change": 0.5069961290795755,
+    "change_percent": 44.3,
+    "direction": "increased"
+   },
+   {
+    "label": "Hemoglobin-related spectral feature",
+    "baseline": 0.5107356653645082,
+    "current": 0.47802904507424404,
+    "change": -0.032706620290264166,
+    "change_percent": -6.4,
+    "direction": "decreased"
+   },
+   {
+    "label": "Colour intensity",
+    "baseline": 0.09300473452816596,
+    "current": 0.11839505648028954,
+    "change": 0.025390321952123582,
+    "change_percent": 27.3,
+    "direction": "increased"
+   },
+   {
+    "label": "Brightness",
+    "baseline": 0.31779965436064417,
+    "current": 0.24122855707774235,
+    "change": -0.07657109728290182,
+    "change_percent": -24.1,
+    "direction": "decreased"
+   },
+   {
+    "label": "Estimated spectral intensity",
+    "baseline": 0.34707137010245204,
+    "current": 0.31490934811690263,
+    "change": -0.032162021985549405,
+    "change_percent": -9.3,
+    "direction": "decreased"
+   },
+   {
+    "label": "Texture / local contrast",
+    "baseline": 0.11060919181221021,
+    "current": 0.05898212942933451,
+    "change": -0.051627062382875705,
+    "change_percent": -46.7,
+    "direction": "decreased"
+   }
+  ]
+ },
+ "region": {
+  "baseline_image": "data:image/jpeg;base64,AA==",
+  "current_highlighted": "data:image/jpeg;base64,AA==",
+  "difference_map": "data:image/jpeg;base64,AA==",
+  "spectral_highlighted": "data:image/jpeg;base64,AA==",
+  "region": {
+   "x": 0.33984375,
+   "y": 0.29296875,
+   "width": 0.29296875,
+   "height": 0.296875,
+   "basis": "largest_difference"
+  },
+  "note": "The difference map compares this photo with your baseline photo; it assumes similar framing and lighting."
+ },
+ "spectral": {
+  "available": true,
+  "false_color_image": "data:image/jpeg;base64,AA==",
+  "band_image": "data:image/jpeg;base64,AA==",
+  "band_wavelength_nm": 550,
+  "wavelength_range_nm": [
+   400,
+   700
+  ],
+  "band_count": 31,
+  "note": "Spectral information is AI-estimated from the ordinary RGB photo. It is not an actual multispectral or hyperspectral measurement."
+ },
+ "history": {
+  "points": [
+   {
+    "scan_number": 1,
+    "date": "2026-09-18T08:02:56.409970+00:00",
+    "status": "Baseline established",
+    "change_percent": null,
+    "change_score": null,
+    "is_current": false
+   },
+   {
+    "scan_number": 2,
+    "date": "2026-09-18T08:03:06.614118+00:00",
+    "status": "Stable",
+    "change_percent": 0.7,
+    "change_score": 4.6,
+    "is_current": false
+   },
+   {
+    "scan_number": 3,
+    "date": "2026-09-18T08:03:09.942045+00:00",
+    "status": "Stable",
+    "change_percent": 0.5,
+    "change_score": 3.3,
+    "is_current": false
+   },
+   {
+    "scan_number": 4,
+    "date": "2026-09-18T08:03:13.232186+00:00",
+    "status": "Slight change",
+    "change_percent": 9.8,
+    "change_score": 48.0,
+    "is_current": false
+   },
+   {
+    "scan_number": 5,
+    "date": "2026-09-18T08:03:17.307856+00:00",
+    "status": "Change detected",
+    "change_percent": 21.3,
+    "change_score": 75.8,
+    "is_current": true
+   }
+  ],
+  "trend": "increasing",
+  "trend_text": "Change is increasing compared with the previous scan."
+ },
+ "explanation": {
+  "finding": "SpectraDerm model-derived finding (not a diagnosis): Compared with the person's own baseline photo, the monitored skin region shows an overall model-derived change of 21% (change detected). Largest changes: texture / local contrast decreased by 47%; redness-related feature increased by 44%; colour intensity increased by 27%. Change is increasing compared with the previous scan.\nRetrieve only relevant source-attributed medical context.",
+  "text": "What was observed: Compared with the person's own baseline photo, the monitored skin region shows an overall model-derived change of 21% (change detected). Largest changes: texture / local contrast decreased by 47%; redness-related feature increased by 44%; colour intensity increased by 27%. Change is increasing compared with the previous scan.\n\nWhy it can matter:\n- The source notes that irregular color can be associated with melanin changes, blood vessel changes, or inflammation related to rashes. It advises contacting a health professional for lasting skin color changes without a known cause, a new mole or growth, or an existing growth that changes color, size, or appearance. [MedlinePlus / U.S. National Library of Medicine]\n- The source advises contacting a GP if there are concerns about a new or changing mole. [NHS]\n- The source says visible color can appear differently across skin tones and that blood vessels can be difficult to see on darker skin tones. [American Academy of Dermatology]\n\nThe observed change alone does not identify a specific condition; these sources give general context only.",
+  "withheld": false,
+  "origin": "retrieved_sources",
+  "sources": [
+   {
+    "title": "Patchy skin color",
+    "organization": "MedlinePlus / U.S. National Library of Medicine",
+    "url": "https://www.medlineplus.gov/ency/article/003224.htm",
+    "excerpt": "The source notes that irregular color can be associated with melanin changes, blood vessel changes, or inflammation related to rashes. It advises contacting a health professional for lasting skin color changes without a known cause, a new mole or growth, or an existing growth that changes color, size, or appearance. These are general source-context statements and do not establish what any SpectraDerm feature or score means."
+   },
+   {
+    "title": "Symptoms of melanoma skin cancer",
+    "organization": "NHS",
+    "url": "https://www.nhs.uk/conditions/melanoma-skin-cancer/symptoms-of-melanoma-skin-cancer/",
+    "excerpt": "The source advises contacting a GP if there are concerns about a new or changing mole. This warning-sign material is retained for future evidence-context retrieval only. It does not mean SpectraDerm detects melanoma or that a feature difference or Change/Anomaly Score indicates cancer."
+   },
+   {
+    "title": "Rosacea: Signs and symptoms",
+    "organization": "American Academy of Dermatology",
+    "url": "https://www.aad.org/public/diseases/rosacea/what-is/symptoms",
+    "excerpt": "The source says visible color can appear differently across skin tones and that blood vessels can be difficult to see on darker skin tones. This limited common-condition context is retained only for later evidence retrieval. It does not mean a visible feature, change score, or estimated spectrum detects rosacea."
+   }
+  ],
+  "evidence_count": 3
+ },
+ "safety": {
+  "professional_assessment_recommended": true,
+  "assessment": "Professional assessment may be appropriate.",
+  "claims_reviewed": true,
+  "notes": [
+   "The detected change does not mean that a disease has been identified."
+  ]
+ },
+ "next_action": {
+  "type": "professional",
+  "title": "Consider a professional assessment",
+  "steps": [
+   "Show this report to a dermatologist or GP.",
+   "Keep scanning under the same lighting and position so changes stay comparable.",
+   "Use “Find a dermatologist” to see options near you."
+  ]
+ },
+ "technical": {
+  "image_quality": {
+   "status": "REVIEW",
+   "passed": false,
+   "reasons": [
+    "Image may be underexposed.",
+    "Lighting may be uneven."
+   ]
+  },
+  "skin_detected": true,
+  "monitored_region": "Region A",
+  "rgb_input_shape": [
+   1024,
+   1024,
+   3
+  ],
+  "model_input_shape": [
+   256,
+   256,
+   3
+  ],
+  "spectral_output_shape": [
+   256,
+   256,
+   31
+  ],
+  "reconstruction_status": "Passed",
+  "rgb_feature_count": 37,
+  "features_used": [
+   "RGB features",
+   "AI-estimated spectral features",
+   "Temporal features"
+  ],
+  "change_score_method": "Deviation of key RGB and AI-estimated spectral features from the personal baseline (scan 1)",
+  "anomaly_model": {
+   "available": true,
+   "score": 99.55286383691757,
+   "category": "Higher Change",
+   "minimum_reference_scans": 4,
+   "interpretation": "The current observation shows a higher degree of feature-pattern change relative to the selected reference."
+  }
+ },
+ "disclaimer": "SpectraDerm is an AI-based skin monitoring and awareness prototype. It does not diagnose skin diseases, determine disease probability, replace a dermatologist, or guarantee that a detected change is medically significant. Estimated spectral information is a model prediction rather than a direct spectral measurement."
+}

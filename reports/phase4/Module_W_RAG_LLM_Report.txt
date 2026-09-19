@@ -1,0 +1,54 @@
+SpectraDerm Module W: RAG Retrieval and Evidence-Grounded LLM
+==============================================================
+
+Objective
+---------
+Connect an existing SpectraDerm model-derived finding to the frozen local
+knowledge base, then provide a source-grounded language explanation. Module W
+does not calculate anomaly scores, reinterpret model outputs, diagnose, or
+predict disease.
+
+Architecture and retrieval process
+----------------------------------
+Existing SpectraDerm analysis -> model-derived finding -> deterministic query
+construction -> frozen Module U Step 2 vector retrieval -> attributed evidence
+chunks -> language-only explanation. RAGPipeline receives an injected
+retriever and calls its retrieve(query, top_k) method. Each RetrievalResult is
+copied into a RetrievedEvidence record without modifying chunk ID, text,
+score, source ID, title, organization, URL, or topic.
+
+LLM role and evidence-grounding design
+--------------------------------------
+LLMProvider is a small provider-agnostic interface with generate(prompt).
+DeterministicMockLLM supports tests and notebooks without a cloud dependency
+or API key. The prompt labels the model finding as non-diagnostic, encloses
+the retrieved evidence with source IDs, and requires medical claims to use
+only that evidence. With no finding or no retrieval result, generation is not
+called and the result explicitly says that no evidence-grounded explanation
+can be provided.
+
+Safety boundaries
+-----------------
+The prompt prohibits diagnosis, disease probabilities, unsupported citations,
+claims that an estimated spectral reconstruction is measured, and claims that
+RGB or spectral features are confirmed biomarkers. It requires a distinction
+between model output and medical knowledge, and permits professional-evaluation
+language only when supported by retrieved evidence. The pipeline never creates
+new medical evidence or directly evaluates SpectraDerm anomaly scores.
+
+Testing
+-------
+Tests use a fake retriever and deterministic mock LLM to verify retrieval
+calls, top-k forwarding, exact source attribution, prompt evidence inclusion,
+empty-input and no-evidence handling, repeatability, and absence of added
+medical interpretation by query construction. Existing U and V test suites
+remain part of the validation command.
+
+Limitations and future work
+---------------------------
+Prompt constraints reduce but cannot independently prove an external LLM's
+factual compliance. The module has no mandatory cloud provider; a future
+optional provider should read credentials from an environment variable and
+remain disabled unless explicitly configured. Future work can add output
+auditing and human-review workflows without changing the frozen corpus,
+retriever, or upstream analysis modules.

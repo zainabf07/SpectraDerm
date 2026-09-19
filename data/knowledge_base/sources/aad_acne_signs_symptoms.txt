@@ -1,0 +1,5 @@
+## Signs and symptoms
+The American Academy of Dermatology lists whiteheads, blackheads, pimples, nodules, and cysts among acne breakouts. Its page describes a whitehead as a raised white or flesh-colored blemish that can form when oil and dead skin cells plug a pore.
+
+## Inflammation and surface context
+The source explains that a nodule or cyst can develop when inflammation goes deep into the skin and may feel tender or painful. This is limited common-condition context for later retrieval. It does not create an acne label from an image, a feature value, estimated spectral information, or a Change/Anomaly Score.

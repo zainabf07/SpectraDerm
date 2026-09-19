@@ -1,0 +1,137 @@
+SpectraDerm - Module M Spectral Feature Extraction Report
+==========================================================
+
+Module: M - Spectral Feature Extraction
+Status: Technically completed
+
+1. OBJECTIVE AND ARCHITECTURE ROLE
+----------------------------------
+
+Module M extracts deterministic, conventional numerical features from the
+AI-estimated 31-band VIS spectral cube produced by Module I. It is a feature
+layer for future classical feature fusion and machine-learning experiments;
+it is not a diagnostic classifier. Module M operates on AI-estimated
+reconstructed VIS spectral information, not direct hyperspectral measurements.
+
+2. IMPLEMENTATION AND INPUT OUTPUT CONTRACT
+--------------------------------------------
+
+Implementation: src/spectraderm/features/spectral_features.py
+Public API: extract_spectral_features(spectral_cube, wavelengths_nm=None,
+mask=None) -> SpectralFeatureResult
+
+The cube must be a finite numeric NumPy array with exact shape (H, W, 31) and
+non-empty spatial dimensions. It is never transposed, resized, interpolated,
+clipped, or repaired. Default wavelengths are exactly the 31 Hyper-Skin VIS
+values: 400, 410, 420, 430, 440, 450, 460, 470, 480, 490, 500, 510, 520,
+530, 540, 550, 560, 570, 580, 590, 600, 610, 620, 630, 640, 650, 660, 670,
+680, 690, and 700 nm. Custom wavelength arrays must have exactly 31 finite,
+strictly increasing, unique values; they are never silently sorted.
+
+An optional finite numeric or boolean (H, W) mask selects an ROI. Without a
+mask, the whole cube is selected. Empty and dimension-mismatched masks are
+rejected. SpectralFeatureResult includes flat float features, feature groups,
+the ROI regional-mean signature and aligned wavelengths, ROI metadata, and
+warnings.
+
+3. FEATURE DEFINITIONS
+----------------------
+
+Band intensities: for every available wavelength X, spectral_mean_X is the
+mean ROI value and spectral_std_X is its population standard deviation.
+
+Ratios: ratio_540_650, ratio_550_650, ratio_570_650, ratio_580_650,
+ratio_600_650, and ratio_650_700 are mean(A) / mean(B). A zero or near-zero
+denominator yields NaN plus a warning, never infinity.
+
+Differences: difference_540_550, difference_550_570, difference_570_600,
+difference_600_650, and difference_650_700 are mean(A) - mean(B), preserving
+sign.
+
+Slopes: slope_400_500, slope_500_600, slope_600_700, and slope_400_700 are
+(mean(B) - mean(A)) / (B nm - A nm), using actual wavelength values.
+
+Regional statistics: regional_spectral_mean, regional_spectral_std,
+regional_spectral_median, regional_spectral_min, and regional_spectral_max
+summarize all selected pixels over all 31 bands. spectral_signature is a
+separate shape-(31,) array of regional mean values, index-aligned to
+wavelengths_nm; it is deliberately not placed in the flat feature dictionary.
+
+4. INVESTIGATIONAL PROXIES
+--------------------------
+
+vascular_related_spectral_proxy is (mean_540 - mean_580) /
+(mean_540 + mean_580), returning NaN plus a warning for a near-zero
+denominator. It is a visible-band spectral appearance pattern only.
+
+pigmentation_related_spectral_proxy is mean_650 / mean_540, returning NaN
+plus a warning for a near-zero denominator. It is a visible-band spectral
+appearance pattern only.
+
+Vascular-related features are investigational proxies and are not measurements
+of hemoglobin concentration or inflammation. Pigmentation-related spectral
+features are investigational proxies and are not direct measurements of
+melanin concentration. Neither proxy is calibrated, diagnostic, or a
+biological concentration measurement.
+
+5. EXCLUSIONS
+-------------
+
+The current 400-700 nm output is not used to derive a water-related proxy.
+No water content, water concentration, water absorption, or hydration feature
+is provided because this visible-only range does not support that
+interpretation. A structural/collagen-related proxy is not established by the
+current spectral output and is excluded. No collagen concentration, structural
+tissue score, or skin-structure score is provided.
+
+6. NOTEBOOK AND TESTING
+-----------------------
+
+notebooks/Module_M_Spectral_Feature_Extraction.ipynb demonstrates local
+feature extraction. It prefers data/interim/face_spectral_cube.npy and
+explicitly transposes it once only when it is channel-first (31, H, W). If the
+file is unavailable, it clearly creates a small synthetic demonstration cube.
+It requires no Colab, GPU, PyTorch, or Hyper-Skin archive.
+
+tests/test_spectral_features.py uses deterministic small synthetic cubes and
+covers validation, canonical and invalid wavelengths, no sorting, intensity
+mapping, ROI behavior, undefined ratios, differences, actual-nm slopes,
+regional statistics, signature alignment, proxies, exclusions, determinism,
+and result metadata. Final test results are recorded after validation.
+
+Validation result: 31 Module M tests passed in 0.87 seconds. The requested
+frozen Module I-L regression set produced 40 passed and 1 skipped in 1.82
+seconds. The skipped test is the PyTorch-backed MST++ RGB-to-VIS integration
+test; PyTorch remains intentionally unavailable in the local Windows
+environment. No packages were installed.
+
+7. RELATIONSHIP TO MODULES I THROUGH L
+--------------------------------------
+
+Module I supplies the estimated VIS cube. Module J validates reconstruction
+quality where reference data are available; Module M does not reinterpret that
+validation. Module K visualizes estimated spectral cubes; Module M calculates
+numerical features without changing visualization behavior. Module L supplies
+independent conventional RGB features. Modules G and H may supply an ROI mask,
+but Module M performs no segmentation or localization.
+
+8. LIMITATIONS AND SAFETY BOUNDARIES
+------------------------------------
+
+Spectral features do not establish disease presence or absence. They do not
+diagnose disease, produce disease probability, or establish inflammation,
+redness, melanin, blood oxygenation, collagen, water, lesions, cancer, or any
+other medical condition. Results depend on the reconstructed cube quality,
+illumination and camera inputs to reconstruction, the supplied ROI, and the
+limitations of AI-estimated VIS information.
+
+9. COMPLETION STATUS
+--------------------
+
+[YES] Strict 31-band HWC validation
+[YES] Wavelength and ROI validation
+[YES] Band, ratio, difference, slope, and regional features
+[YES] Aligned regional spectral signature
+[YES] Two conservative investigational proxies
+[YES] Water and structural/collagen exclusions
+[YES] Dedicated tests and local notebook

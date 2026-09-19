@@ -1,0 +1,45 @@
+SpectraDerm Module AB: Product Agent
+=====================================
+
+Objective and narrow scope
+--------------------------
+AB provides deterministic suggestions of general OTC skincare categories from
+supplied model-derived appearance/pattern context. Recommendations are general
+OTC skincare categories and are not diagnoses, prescriptions, or
+disease-treatment plans. AB does not inspect images, call models, retrieve
+evidence, or recalculate monitoring.
+
+Architecture and upstream relationships
+----------------------------------------
+AB accepts opaque structured outputs from X Vision, Y Monitoring, Z Evidence,
+and AA Safety. It uses X-style finding text only to recognize one controlled
+appearance category and retains Y monitoring context without reinterpreting
+scores. Z is not queried. AA is the hard gate: when its professional assessment
+flag is true, AB returns referral_preferred and no recommendations.
+
+Controlled catalog and mappings
+-------------------------------
+The catalog contains category-only entries for gentle cleansing, moisturizing,
+sun protection, pigment-support/corrective context, topical antioxidants,
+gentle chemical exfoliation, soothing skincare, and selected OTC acne-like/
+texture skincare categories. The only supported appearance categories are
+pigmentation, redness_irritation, acne_like_texture, dryness_barrier, and
+unknown. Explicit pattern mappings give different lists for each supported
+pattern; unknown has no targeted recommendation. Entries contain no brands,
+products, prices, URLs, affiliate content, or commercial partners.
+
+Safety, separation, and validation
+-----------------------------------
+Reasons identify only a model-derived appearance/pattern context; they do not
+claim a category cures, treats, or diagnoses a condition. Persistent or
+increasing model-derived change alone does not trigger referral. Commercial
+products do not influence SpectraDerm's detection, reconstruction, feature
+extraction, ML scoring, anomaly analysis, or monitoring. Synthetic tests cover
+all mappings, distinct outputs, AA gating, no referral from change alone,
+non-fabrication, no brands/prescriptions, preservation, and determinism.
+
+Limitations and future integration
+----------------------------------
+AB cannot establish suitability for an individual, offer a regimen, or replace
+professional care. A future AD orchestrator may consume its structured result;
+AB does not implement product shopping, referral, MCP, backend, or frontend.

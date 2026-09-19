@@ -1,0 +1,5 @@
+## Surface and inflammation-related appearance
+The American Academy of Dermatology describes atopic dermatitis symptoms including itch, dry or scaly areas, rash, and, in some cases, bumps that can ooze or crust after scratching. The page explains that appearance can vary with age and skin tone.
+
+## Scope note
+This source supplies limited context about visible surface and inflammation-related appearance only. It does not support determining atopic dermatitis, inflammation, or severity from SpectraDerm features, images, or a change score.

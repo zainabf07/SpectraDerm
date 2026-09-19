@@ -1,0 +1,47 @@
+SpectraDerm Module Z: Evidence Agent
+=====================================
+
+Objective and architecture
+--------------------------
+Module Z is an agent-level evidence coordinator, not a second RAG system,
+diagnosis model, classifier, spectral model, or monitoring algorithm. It
+receives a structured finding from Vision Agent X and optional Monitoring Agent
+Y context, then delegates to an injected Module W RAGPipeline:
+finding/context -> Evidence Agent -> Module W query/retrieval/LLM -> attributed
+evidence and grounded explanation.
+
+Inputs and query construction
+-----------------------------
+EvidenceAgentInput accepts a structured finding, opaque monitoring result,
+optional explicit query, top-k, and non-sensitive additional text. A non-empty
+explicit query takes precedence verbatim. Otherwise, the deterministic request
+combines only supplied finding text, additional context, and the supplied
+monitoring trend/current-status labels. It deliberately excludes change scores
+and does not add medical terminology, diagnoses, or claims of progression.
+
+RAG delegation, evidence preservation, and grounding
+-----------------------------------------------------
+Module W remains the sole source of chunking, embeddings, vector ranking,
+knowledge-base construction, prompt construction, and LLM provider behavior.
+Z injects and calls W's run(request, top_k) method once. RetrievedEvidence,
+source metadata, chunk IDs, text, and ordering are copied without modification
+and remain separate from explanation text. Grounding states are no_query,
+insufficient_evidence, explanation_unavailable, and evidence_found.
+
+Safety and deterministic behavior
+---------------------------------
+Z makes no medical claims or evidence. It preserves W's grounding boundary and
+states that model findings/trends are not diagnosis or disease probabilities,
+increasing change is not disease progression, estimated spectra are not
+measured spectroscopy, and features are not confirmed biomarkers. Identical
+inputs and a deterministic injected W pipeline return identical outputs. No
+cloud calls, API keys, or new dependencies are required.
+
+Limitations, validation, and future integration
+------------------------------------------------
+Z cannot make evidence available when W returns none, and it does not validate
+an external LLM beyond using W's constrained interface. Tests use controlled
+synthetic W-compatible responses to verify forwarding, attribution, empty and
+no-evidence handling, deterministic behavior, and safety. A future Safety
+Agent AA and Orchestrator AD can consume the structured result; neither is
+implemented here. Module O/P is not used and remains evaluation-only.

@@ -1,0 +1,13 @@
+{
+  "model": "RandomForestClassifier",
+  "features": "RGB-only",
+  "n_features": 24,
+  "n_train": 1112,
+  "n_test": 278,
+  "accuracy": 0.4856115107913669,
+  "balanced_accuracy": 0.4044322607091617,
+  "macro_precision": 0.5017636277843054,
+  "macro_recall": 0.4044322607091617,
+  "macro_f1": 0.41172360366733773,
+  "random_state": 42
+}

@@ -1,0 +1,36 @@
+SpectraDerm Module S: Longitudinal Comparison
+================================================
+
+Purpose
+-------
+Module S deterministically compares a selected Module R personal feature
+baseline with a current Module N CombinedFeatureResult. It provides transparent
+per-feature arithmetic for downstream monitoring or visualization.
+
+Method
+------
+For each feature in the union of baseline and current names, Module S records
+the available baseline and current values. When both are finite, delta is
+current minus baseline, absolute_delta is its absolute value, and relative
+change is delta divided by abs(baseline). Relative change remains unavailable
+when the baseline is zero.
+
+Missing-value handling
+----------------------
+Missing baseline values, missing current values, unavailable Module R baseline
+features, and non-finite/nonnumeric values receive explicit feature-status
+labels. No missing or non-finite value is replaced with zero, and incompatible
+namespaces are not silently compared.
+
+Relationship to Module Q
+------------------------
+Module S does not calculate a Change/Anomaly Score and does not alter Module
+Q's anomaly algorithm. It supplies transparent longitudinal comparison output;
+Module Q remains the separate feature-pattern scoring component.
+
+Limitations and safety boundary
+-------------------------------
+Module S performs arithmetic feature comparison only. A numerical difference
+does not establish clinically meaningful skin change. It creates no disease
+prediction, probability, or diagnosis, and it does not fabricate longitudinal
+clinical data. This implementation makes no clinical-validation claim.

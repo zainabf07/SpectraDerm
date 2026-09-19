@@ -1,0 +1,45 @@
+SpectraDerm Module V: Document Processing
+==========================================
+
+Objective
+---------
+Make the local knowledge-base document flow explicit, reusable,
+deterministic, and testable while preserving the frozen Module U corpus and
+retrieval implementation.
+
+Pipeline
+--------
+Cached source documents -> heading-safe normalization view -> Module U Step 1
+chunk builder -> KnowledgeChunk objects -> Module U Step 2 embeddings and
+persisted NumPy retrieval index. Module V does not embed or persist an index;
+those operations remain owned by U Step 2.
+
+Implementation
+--------------
+document_processing.py loads the authoritative Module U source catalog and
+maps each cached text file to a SourceDocument. clean_document_text performs
+only idempotent line-ending and incidental-whitespace normalization, retaining
+headings and paragraph boundaries. documents_to_chunks verifies the complete
+canonical source set and delegates directly to Module U Step 1 build_chunks.
+It therefore creates no alternate chunking policy or competing chunk IDs.
+
+Deterministic validation
+------------------------
+Validation requires unique chunk IDs, non-empty text, complete source-ID
+coverage, and exact preservation of title, organization, URL, topic,
+category, and retrieval-date metadata. Repeated processing yields the same
+KnowledgeChunk objects. The fixed corpus contains 7 sources and 14 chunks.
+
+Limitations
+-----------
+Only the locally cached, manifest-approved corpus is processed. This module
+does not download new documents, assess source freshness, create embeddings,
+or build a retrieval index. Normalization is intentionally conservative so it
+does not alter frozen U chunking semantics.
+
+Safety boundaries
+-----------------
+Document processing and retrieval context are not diagnosis, medical advice,
+or clinical validation. No LLM, agent, MCP integration, backend, or frontend
+behavior is introduced. A mention of a condition in a source must not be
+treated as detection of that condition by SpectraDerm.

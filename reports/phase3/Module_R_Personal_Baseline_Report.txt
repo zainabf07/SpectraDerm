@@ -1,0 +1,53 @@
+SpectraDerm Module R: Personal Feature Baseline
+================================================
+
+Objective
+---------
+Module R constructs a deterministic personal feature baseline from selected
+historical Module N feature observations. The result is a reusable reference
+state for longitudinal comparison.
+
+Implementation and baseline definition
+--------------------------------------
+build_personal_baseline accepts one or more Module N CombinedFeatureResult
+objects or compatible feature mappings. For every preserved feature name, its
+baseline value is the median of finite values in the supplied observations.
+The result records the total observation count, each feature's contributor
+count, and names whose baseline remains unavailable.
+
+Why the median is used
+----------------------
+The median is deterministic and is less affected by an individual extreme
+historical value than a simple arithmetic mean. Module R applies no learned
+model, clinical calibration, or threshold.
+
+Missing and non-finite values
+-----------------------------
+NaN, positive infinity, and negative infinity are ignored for that feature's
+median. They are not converted to zero. A feature with no finite historical
+value is not assigned a fabricated baseline value; it is reported as
+unavailable with zero contributors.
+
+Module N and Q/S integration
+----------------------------
+For CombinedFeatureResult inputs, Module R reads current_features, preserving
+the existing RGB and estimated-spectral names and namespaces. Its baseline
+mapping is compatible with Module Q's selected reference/history interface;
+Module R does not alter Q's scoring algorithm. A future Module S can use the
+same baseline and availability metadata for longitudinal comparison or
+visualization.
+
+Validation
+----------
+Focused tests cover single-observation identity, per-feature medians,
+non-finite exclusion, unavailable features, namespace preservation,
+observation counts, invalid inputs, and deterministic output. The accompanying
+notebook is a lightweight software/integration demonstration using synthetic
+Module N-style mappings.
+
+Limitations and safety boundary
+-------------------------------
+The baseline is a selected reference state, NOT clinically normal or healthy
+skin. It reflects only the selected historical observations and available
+features; it does not fabricate temporal data. Module R does not diagnose
+disease and does not produce disease probabilities or clinical claims.

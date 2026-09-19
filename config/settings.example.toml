@@ -1,0 +1,15 @@
+# Reference only. Runtime configuration is provided through SPECTRADERM_* variables.
+
+[paths]
+data_dir = "data"
+models_dir = "models"
+
+# Point these to mounted or local raw-data locations when available.
+hyperskin_root = "data/raw/hyper_skin"
+uminho_hsfd_root = "data/raw/uminho_hsfd"
+
+# Trained Hyper-Skin RGB -> VIS MST++ checkpoint.
+mstpp_hyperskin_vis_checkpoint = "models/mstpp_hyperskin_vis_best_10pairs.pth"
+
+[logging]
+level = "INFO"

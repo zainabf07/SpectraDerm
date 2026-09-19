@@ -1,0 +1,31 @@
+MODULE AI — DERMATOLOGIST DATABASE/API REPORT
+
+Purpose
+Module AI is provider-search infrastructure, not an AI/ML model. It performs transient broad dermatology provider search through an injected external-provider boundary and returns normalized records.
+
+Relationship between AC and AI
+AC remains responsible for Safety-gated referral routing and deterministic ranking. AI accepts AC's permitted location/search parameters and supplies normalized broad dermatology records. AI does not alter AC's ranking or referral decision logic.
+
+External provider architecture and Google adapter
+DermatologistSearchService depends on a DermatologistProvider protocol. GooglePlacesProvider is a production-oriented adapter that uses a configurable HTTP client and endpoint. Fake providers make tests deterministic without external traffic.
+
+Normalized schema
+ProviderRecord contains only stable provider fields: external ID, name, address, optional coordinates/distance/rating/hours/phone/website, category, and source. Raw response fields are discarded. Distance identifies whether it was externally supplied or calculated from explicitly supplied search/provider coordinates.
+
+Location-consent and privacy boundary
+AI accepts a manual city/location or explicitly supplied coordinates; it never obtains device location. It validates and uses a sanitized transient copy only. It creates no location history, persistent location database, scan attachment, or user record.
+
+API-key security
+GooglePlacesProvider reads GOOGLE_MAPS_API_KEY from server-side environment configuration unless an injected server-side value is provided. It never returns key material or raw exception messages. Environment variables alone are not production security.
+
+Error handling
+Missing/invalid location, radius, and limit produce structured errors. Provider authentication, rate-limit-like statuses, malformed responses, and exceptions produce a generic provider-unavailable result without secrets or raw provider payloads.
+
+No medical/referral decisions
+AI requests only broad dermatology. It makes no diagnosis, probability, urgency, treatment, disease-specific specialist inference, or referral decision and does not override Safety/AC.
+
+Limitations and future backend/frontend connection
+The included adapter is an integration boundary, not a production deployment. Production additionally requires authenticated backend access, HTTPS, secret management, rate limiting, audit/security controls, resilience, and compliance review as appropriate. A backend can inject AI into AC's existing provider interface; a frontend supplies only user-permitted transient search location.
+
+Test results
+The focused AI suite contains 24 deterministic fake-provider/client tests covering normalization, validation, errors, environment key handling, no key leakage, transient location, AC compatibility, and no medical logic. No Google calls were made. Pytest was not run because Python is unavailable on PATH in this environment.

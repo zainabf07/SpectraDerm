@@ -1,0 +1,22 @@
+MODULE AF — USER MANAGEMENT REPORT
+
+Purpose
+AF maintains only a pseudonymous user/session identifier, associated scan IDs, UTC timestamps, general consent, and location-consent status.
+
+Minimal data model
+UserRecord contains user_id, scan_ids, created_at, updated_at, general_consent, and location_consent. It deliberately has no names, contact data, credentials, addresses, image contents, precise coordinates, or medical fields.
+
+Consent separation
+General consent and location consent are independent boolean fields. Updating either one never silently changes the other.
+
+Privacy design
+User identifiers use cryptographically random secrets tokens. AF retains only scan IDs, not scan files or image contents, and no coordinate field exists in its record model. Deletion removes the record and all AF scan-ID associations.
+
+Responsibilities and boundaries
+The public service creates, retrieves, updates, associates scans, and deletes records through a small repository abstraction. It performs no authentication, image analysis, scan storage, provider lookup, MCP, medical reasoning, or external API call.
+
+Testing results
+The focused test suite contains 15 deterministic tests using an injected clock and in-memory repository. It covers IDs, timestamps, independent consent, scans, duplicate handling, unknown users, deletion, field privacy, immutability, validation, and repository injection. Pytest was not run because Python is not available on PATH in this environment.
+
+Limitations
+The included repository is intentionally in-memory and process-local. A future database-backed UserRepository can replace it without changing the public UserManagement service API.

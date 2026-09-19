@@ -1,0 +1,141 @@
+SpectraDerm - Module L RGB Feature Extraction Report
+=====================================================
+
+Module: L - RGB Feature Extraction
+Phase: Phase 3 - Spectral Reconstruction and Analysis
+Status: Technically completed
+
+1. OBJECTIVE
+------------
+
+Module L provides deterministic, conventional, interpretable numerical
+features from an RGB image and an optional supplied skin or ROI mask. The
+features are intended for future feature fusion or classical machine-learning
+experiments. This module is not a diagnostic classifier and does not perform
+disease segmentation.
+
+2. IMPLEMENTATION AND CONTRACT
+------------------------------
+
+Implementation location:
+src/spectraderm/features/rgb_features.py
+
+Public API:
+extract_rgb_features(rgb, mask=None) -> RGBFeatureResult
+
+The input image must be a NumPy RGB array of shape (H, W, 3). uint8 input is
+interpreted as 0-255. Floating-point input must already be in [0, 1]; values
+outside that range are rejected. NaN, infinity, nonnumeric inputs, invalid
+shapes, invalid channel counts, invalid masks, mismatched mask dimensions,
+and empty masks are rejected with clear exceptions.
+
+The optional mask has shape (H, W); non-zero pixels define the selected ROI.
+Without a mask, color, texture, and RGB-proxy features use the full image.
+Shape and local ROI contrast then return NaN with documented warnings rather
+than inventing a region shape or context.
+
+RGBFeatureResult contains a flat numerical feature dictionary, feature-group
+membership, ROI pixel count, mask fraction, image shape, and warnings.
+
+3. FEATURE GROUPS AND DEFINITIONS
+---------------------------------
+
+Color features:
+- color_mean_r/g/b, color_std_r/g/b, color_median_r/g/b are ROI RGB channel
+  statistics after normalization to [0, 1].
+- color_mean_h/s/v and color_std_h/s/v are ROI HSV statistics. Hue is stored
+  normalized to [0, 1]; saturation and value are also in [0, 1].
+
+Texture features:
+- grayscale_mean and grayscale_std use standard RGB-to-grayscale conversion.
+- gradient_mean and gradient_std use Sobel gradient magnitude.
+- local_variance_mean is the mean ROI variance from a 3 x 3 local window.
+
+Shape features, only for a supplied ROI mask:
+- shape_area_pixels and shape_area_fraction: included pixels and image share.
+- shape_perimeter: sum of external OpenCV contour perimeters.
+- shape_bbox_width/height, shape_aspect_ratio, and shape_extent: bounding-box
+  geometry, with extent equal to ROI pixels divided by bounding-box pixels.
+- shape_solidity: external contour area divided by its combined convex-hull
+  area; it is NaN when this is undefined for a degenerate contour.
+- shape_circularity: 4*pi*A/P^2, using ROI pixel area A and contour perimeter
+  P; it is NaN when P is zero.
+
+Local contrast features:
+- local_contrast_gray/r/g/b are absolute differences between the ROI mean and
+  its surrounding-context mean. Context is the ROI bounding box expanded by
+  10 percent (at least one pixel), excluding the ROI. Features are NaN if no
+  surrounding pixels are available.
+
+Pigmentation-related RGB proxies:
+- pigmentation_darkness_proxy: 1 minus ROI mean normalized grayscale.
+- pigmentation_red_green_ratio: mean R / (mean G + epsilon).
+- pigmentation_red_blue_ratio: mean R / (mean B + epsilon).
+- pigmentation_chroma_proxy: mean Euclidean distance of ROI RGB pixels from
+  their per-pixel neutral grayscale value.
+
+Pigmentation-related features are RGB appearance proxies and are not direct
+measurements of melanin concentration.
+
+4. TESTING PERFORMED
+--------------------
+
+tests/test_rgb_features.py covers valid uint8 and floating input, stable keys
+and group membership, RGB and HSV statistics, texture values, simple-mask
+shape geometry and circularity, local contrast, RGB proxy values, no-mask
+behavior, every required invalid input class, finite behavior for a constant
+image, deterministic output, and numerical output types.
+
+The module test command is:
+python -m pytest tests/test_rgb_features.py -v
+
+Test result: 18 passed in 5.33 seconds using the existing local Python 3.13
+environment. No packages were installed.
+
+Additional non-PyTorch regression validation passed: 36 existing health,
+vision, and preprocessing tests, plus 21 frozen spectral reconstruction and
+visualization tests. A broader collection including manifest/split tests is
+blocked by a pre-existing Windows Application Control policy that prevents a
+pandas timezone DLL from loading. The PyTorch-backed reconstruction integration
+test was intentionally not run because local PyTorch is not installed.
+
+5. NOTEBOOK DEMONSTRATION
+-------------------------
+
+notebooks/Module_L_RGB_Feature_Extraction.ipynb is a concise local
+demonstration. It constructs a small synthetic RGB image and explicitly
+labels its rectangular mask as a synthetic demonstration ROI. It imports the
+extractor, displays feature groups and a feature table, and states the
+interpretation limits. It does not require Colab or the Hyper-Skin archive.
+
+6. RELATIONSHIP TO OTHER MODULES
+--------------------------------
+
+Module F can assess input image quality before feature extraction. Module G
+can provide a candidate skin mask, and Module H can provide a localized
+candidate-region mask. Module L consumes such a supplied mask but neither
+duplicates nor replaces Modules G or H. Modules I, J, and K respectively
+provide frozen RGB-to-spectral reconstruction, technical validation, and
+spectral visualization. Module L is an independent conventional RGB feature
+layer that can later be combined with spectral features.
+
+7. LIMITATIONS AND SAFETY BOUNDARIES
+------------------------------------
+
+Features depend on image acquisition, illumination, white balance, ROI mask
+quality, and conventional image-processing choices. They are not calibrated
+biophysical measurements. RGB feature extraction does not establish disease
+presence or absence. Shape features describe the supplied ROI/mask and do not
+imply that the ROI represents a disease lesion. No output should be interpreted
+as detecting acne, inflammation, melanin concentration, hemoglobin,
+collagen, lesions, cancer, or any other medical condition.
+
+8. CURRENT COMPLETION STATUS
+----------------------------
+
+[YES] Input and mask validation
+[YES] Color, texture, shape, local-contrast, and RGB proxy feature groups
+[YES] Stable dataclass output and feature-group metadata
+[YES] Dedicated unit tests
+[YES] Local demonstration notebook
+[YES] Explicit scientific and clinical safety boundaries

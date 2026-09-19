@@ -1,0 +1,5 @@
+## Signs and symptoms
+The American Academy of Dermatology states that rosacea signs can include easy flushing, facial redness on lighter skin tones or brown/violet color on darker skin tones, acne-like breakouts, and visible blood vessels. The page also describes burning, stinging, dryness, rough or scaly skin, and itch as possible experiences.
+
+## Appearance context
+The source says visible color can appear differently across skin tones and that blood vessels can be difficult to see on darker skin tones. This limited common-condition context is retained only for later evidence retrieval. It does not mean a visible feature, change score, or estimated spectrum detects rosacea.

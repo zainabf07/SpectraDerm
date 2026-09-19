@@ -1,0 +1,147 @@
+SpectraDerm — Module P: RGB + Estimated Spectral Model
+Evaluation Report
+
+PURPOSE
+-------
+Module P tests whether adding MST++-reconstructed spectral features improves the same downstream supervised task used in Module O.
+
+Question:
+Does adding estimated spectral information to the RGB representation improve acne-severity classification compared with RGB information alone?
+
+Module P is an evaluation/ablation module. Its classifier is NOT a production model.
+
+EXPERIMENTAL CONTROL
+--------------------
+The comparison uses:
+- The same clean ACNE04 dataset as Module O.
+- The same severity labels.
+- The exact same leakage-safe train/test split.
+- The same Random Forest configuration.
+- The same evaluation metrics.
+
+Dataset:
+- Clean images: 1,390
+- Training: 1,112
+- Test: 278
+- Duplicate leakage: 0
+
+FEATURE REPRESENTATION
+----------------------
+RGB-only:
+- 24 usable finite RGB-derived features.
+
+Estimated spectral:
+- 84 features derived from the 31-band MST++ reconstructed VIS representation.
+
+Combined:
+- 108 features total
+- 24 RGB + 84 estimated spectral
+
+The estimated spectral representation corresponds to the project's canonical 400–700 nm VIS range at 10 nm spacing.
+
+IMPORTANT:
+The spectral information is AI-estimated by MST++. It is not directly measured spectral data for ACNE04.
+
+MODEL
+-----
+Same configuration as Module O:
+
+RandomForestClassifier(
+    n_estimators=300,
+    random_state=42,
+    class_weight="balanced",
+    n_jobs=-1
+)
+
+No tuning was performed after observing the Module P test result.
+
+RESULTS
+-------
+Module O — RGB only:
+- Accuracy: 48.56%
+- Balanced Accuracy: 40.44%
+- Macro Precision: 50.18%
+- Macro Recall: 40.44%
+- Macro F1: 41.17%
+
+Module P — RGB + estimated spectral:
+- Accuracy: 45.32%
+- Balanced Accuracy: 36.73%
+- Macro Precision: 41.13%
+- Macro Recall: 36.73%
+- Macro F1: 36.55%
+
+Change relative to Module O:
+- Accuracy: -3.24 percentage points
+- Balanced Accuracy: -3.71 percentage points
+- Macro Precision: -9.05 percentage points
+- Macro F1: -4.62 percentage points
+
+Module P confusion matrix:
+[[37, 58,  6,  1],
+ [20, 77,  4,  4],
+ [ 9, 25,  3,  4],
+ [ 5, 12,  4,  9]]
+
+Class 2 recall:
+- Module O: 9.76%
+- Module P: 7.32%
+
+INTERPRETATION
+--------------
+Under this exact experimental setup, adding the current MST++ estimated spectral features did NOT improve acne-severity classification.
+
+This does not demonstrate that spectral information is useless.
+
+It specifically demonstrates that the current reconstruction, feature set, Random Forest, and transfer from Hyper-Skin to ACNE04 did not improve this particular downstream classification task.
+
+A major limitation is domain transfer. The MST++ checkpoint used here was trained on a limited Hyper-Skin subset and then applied to ACNE04 images with different acquisition/domain characteristics.
+
+The negative classification result therefore cannot be generalized to all spectral reconstruction methods, datasets, spectral features, or downstream tasks.
+
+RELATION TO SPECTRAL ADDED-VALUE EXPERIMENT
+-------------------------------------------
+A separate experiment on paired Hyper-Skin data evaluated prediction of actual wavelength-specific VIS properties.
+
+That experiment showed positive evidence for two of three tested targets, especially the 550/650 ratio.
+
+These results are not contradictory because the experiments have different targets:
+- O/P: acne-severity classification.
+- Spectral Added-Value: wavelength-specific spectral-property prediction.
+
+PRODUCTION BOUNDARY
+-------------------
+rgb_spectral_random_forest.pkl is retained only as an evaluation artifact.
+
+It MUST NOT be loaded or used by the SpectraDerm production application.
+
+Module P exists to provide controlled experimental evidence about the contribution of estimated spectral features.
+
+LIMITATIONS
+-----------
+1. ACNE04 is cross-sectional and cannot validate temporal skin-change detection.
+2. Estimated spectra are not direct measurements.
+3. The reconstruction checkpoint was trained on a limited Hyper-Skin subset.
+4. Domain shift exists between Hyper-Skin and ACNE04.
+5. ACNE04 is imbalanced.
+6. The experiment does not establish clinical diagnostic accuracy.
+7. A negative result for one task does not prove spectral information has no value.
+8. No claim is made that reconstructed spectra create new physical measurements.
+
+CONCLUSION
+----------
+Module P is an important controlled ablation.
+
+RGB + estimated spectral:
+- Accuracy: 45.32%
+- Balanced Accuracy: 36.73%
+- Macro F1: 36.55%
+
+Frozen RGB baseline:
+- Accuracy: 48.56%
+- Balanced Accuracy: 40.44%
+- Macro F1: 41.17%
+
+Therefore, spectral enrichment did not improve this particular ACNE04 classification task.
+
+This is retained as evidence and a limitation, not treated as a project failure. The SpectraDerm production pipeline is focused on RGB-based skin monitoring, estimated spectral enrichment, feature representation, personal baseline comparison, evidence-grounded interpretation, and change/anomaly analysis rather than deploying these acne classifiers.
