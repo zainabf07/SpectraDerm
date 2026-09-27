@@ -16,6 +16,8 @@ See SpectraDerm in action — from **RGB image upload and AI-estimated spectral 
 
 
 
+https://github.com/user-attachments/assets/989945d0-4a8f-4e28-9901-5f447ba61b9e
+
 
 https://github.com/user-attachments/assets/989945d0-4a8f-4e28-9901-5f447ba61b9e
 
